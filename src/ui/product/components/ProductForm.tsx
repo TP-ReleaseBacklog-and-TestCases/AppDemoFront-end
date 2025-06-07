@@ -39,7 +39,7 @@ export function ProductForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
             {['name', 'description', 'category', 'price', 'stock'].map(field => (
                 <div key={field}>
                     <label className="block capitalize">{field}</label>
@@ -48,14 +48,14 @@ export function ProductForm() {
                         type={field === 'price' || field === 'stock' ? 'number' : 'text'}
                         value={String(form[field as Field])}
                         onChange={handleChange}
-                        className="border p-2 w-full"
+                        className="border rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                     />
                 </div>
             ))}
             <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors disabled:opacity-50"
                 disabled={mutation.status === 'pending'}
             >
                 {mutation.status === 'pending' ? 'Guardando…' : 'Guardar'}
