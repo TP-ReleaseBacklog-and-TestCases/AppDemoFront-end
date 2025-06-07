@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { useEditProduct } from '../hooks/useEditProduct'
+import { messages } from '@/messages'
 
 type Init = {
     id: string
@@ -28,7 +29,10 @@ export function EditProductForm({ initial }: { initial: Init }) {
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        mutation.mutate(form)
+        mutation.mutate(form, {
+            onSuccess: () => alert(messages.success.productUpdated),
+            onError: () => alert(messages.error.updateProduct)
+        })
     }
 
     return (

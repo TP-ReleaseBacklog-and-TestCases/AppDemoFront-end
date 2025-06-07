@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { useManageInventory } from '../hooks/useManageInventory'
+import { messages } from '@/messages'
 
 export function ManageInventoryForm({
     productId,
@@ -14,7 +15,10 @@ export function ManageInventoryForm({
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        mutation.mutate({ id: productId, stock })
+        mutation.mutate({ id: productId, stock }, {
+            onSuccess: () => alert(messages.success.inventoryUpdated),
+            onError: () => alert(messages.error.updateProduct)
+        })
     }
 
     return (
