@@ -58,7 +58,7 @@ export function ProductForm() {
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors disabled:opacity-50"
                 disabled={mutation.status === 'pending'}
             >
-                {mutation.status === 'pending' ? 'Guardando…' : 'Guardar'}
+                {mutation.status === 'pending' ? messages.loading.saving : 'Guardar'}
             </button>
             {mutation.status === 'error' && (
                 <p className="text-red-500">Error: {(mutation.error as Error).message}</p>

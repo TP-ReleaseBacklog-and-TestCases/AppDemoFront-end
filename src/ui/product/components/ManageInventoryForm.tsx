@@ -36,7 +36,7 @@ export function ManageInventoryForm({
                 disabled={mutation.status === 'pending'}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors disabled:opacity-50"
             >
-                {mutation.status === 'pending' ? 'Actualizando…' : 'Actualizar Stock'}
+                {mutation.status === 'pending' ? messages.loading.updating : 'Actualizar Stock'}
             </button>
         </form>
     )
