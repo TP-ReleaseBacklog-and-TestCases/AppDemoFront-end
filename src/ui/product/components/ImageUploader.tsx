@@ -29,8 +29,13 @@ export function ImageUploader({ productId }: ImageUploaderProps) {
     }
 
     return (
-        <div className="space-y-4">
-            <input type="file" multiple onChange={handleFiles} />
+        <div className="space-y-4 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <input
+                type="file"
+                multiple
+                onChange={handleFiles}
+                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
             <div className="grid grid-cols-3 gap-2">
                 {previews.map((src, i) => (
                     <img
