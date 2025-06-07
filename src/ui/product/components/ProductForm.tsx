@@ -58,7 +58,7 @@ export function ProductForm() {
                 className="bg-blue-600 text-white px-4 py-2 rounded"
                 disabled={mutation.status === 'pending'}
             >
-                {mutation.status === 'pending' ? 'Guardando…' : 'Guardar'}
+                {mutation.status === 'pending' ? messages.loading.saving : 'Guardar'}
             </button>
             {mutation.status === 'error' && (
                 <p className="text-red-500">Error: {(mutation.error as Error).message}</p>

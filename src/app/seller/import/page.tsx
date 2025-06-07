@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useBulkImport } from '@/ui/product/hooks/useBulkImport'
 import { CsvParserAdapter } from '@/infrastructure/adapters/product/CsvParserAdapter'
+import { messages } from '@/messages'
 
 export default function BulkImportPage() {
     const [file, setFile] = useState<File | null>(null)
@@ -29,15 +30,15 @@ export default function BulkImportPage() {
                 disabled={!file || mutation.status === 'pending'}
                 className="bg-blue-600 text-white px-4 py-2 rounded"
             >
-                {mutation.status === 'pending' ? 'Importando…' : 'Importar CSV'}
+                {mutation.status === 'pending' ? messages.loading.importing : 'Importar CSV'}
             </button>
             {mutation.status === 'success' && (
                 <p className="text-green-600">
-                    Importados {mutation.data.length} productos con éxito
+                    {messages.success.productsImported.replace('{count}', String(mutation.data.length))}
                 </p>
             )}
             {mutation.status === 'error' && (
-                <p className="text-red-600">{(mutation.error as Error).message}</p>
+                <p className="text-red-600">{messages.error.bulkImport}</p>
             )}
         </div>
     )

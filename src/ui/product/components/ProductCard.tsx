@@ -11,7 +11,7 @@ export function ProductCard({ product }: { product: ProductDTO }) {
     const del = useDeleteProduct()
 
     const handleDelete = () => {
-        if (confirm('¿Eliminar este producto?')) {
+        if (confirm(messages.confirmations.deleteProduct)) {
             del.mutate(product.id, {
                 onSuccess: () => alert(messages.success.productDeleted),
                 onError: () => alert(messages.error.deleteProduct)

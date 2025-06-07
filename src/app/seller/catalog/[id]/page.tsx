@@ -6,7 +6,7 @@ import { messages } from '@/messages'
 export default function EditPage({ params }: { params: { id: string } }) {
   const { data, isLoading } = useProduct(params.id)
 
-  if (isLoading) return <p>Cargando…</p>
+  if (isLoading) return <p>{messages.loading.product}</p>
   if (!data) return <p>{messages.error.loadProducts}</p>
 
   return (

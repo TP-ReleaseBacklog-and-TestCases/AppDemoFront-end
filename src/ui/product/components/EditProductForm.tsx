@@ -55,7 +55,7 @@ export function EditProductForm({ initial }: { initial: Init }) {
                 disabled={mutation.status === 'pending'}
                 className="bg-yellow-600 text-white px-4 py-2 rounded"
             >
-                {mutation.status === 'pending' ? 'Actualizando…' : 'Actualizar'}
+                {mutation.status === 'pending' ? messages.loading.updating : 'Actualizar'}
             </button>
             {mutation.isError && (
                 <p className="text-red-500">{(mutation.error as Error).message}</p>

@@ -8,7 +8,7 @@ import { useProducts } from '../hooks/useProducts'
 export function ProductList() {
     const { data, isLoading, isError } = useProducts()
 
-    if (isLoading) return <p>Cargando productos…</p>
+    if (isLoading) return <p>{messages.loading.products}</p>
     if (isError) return <p>{messages.error.loadProducts}</p>
 
     return (
