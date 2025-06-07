@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 import { useDeleteProduct } from '../hooks/useDeleteProduct'
 import { ProductDTO } from '../types/ProductDTO'
+import { messages } from '@/messages'
 
 
 export function ProductCard({ product }: { product: ProductDTO }) {
@@ -11,7 +12,10 @@ export function ProductCard({ product }: { product: ProductDTO }) {
 
     const handleDelete = () => {
         if (confirm('¿Eliminar este producto?')) {
-            del.mutate(product.id)
+            del.mutate(product.id, {
+                onSuccess: () => alert(messages.success.productDeleted),
+                onError: () => alert(messages.error.deleteProduct)
+            })
         }
     }
 

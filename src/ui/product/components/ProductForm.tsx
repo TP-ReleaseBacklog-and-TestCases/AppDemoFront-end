@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 
 import { useAddProduct } from '../hooks/useAddProduct'
 import { CreateProductDTO } from '@/application/product/dto/CreateProductDTO'
+import { messages } from '@/messages'
 
 type ProductFormState = CreateProductDTO
 
@@ -31,7 +32,10 @@ export function ProductForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        mutation.mutate(form)
+        mutation.mutate(form, {
+            onSuccess: () => alert(messages.success.productCreated),
+            onError: () => alert(messages.error.createProduct)
+        })
     }
 
     return (

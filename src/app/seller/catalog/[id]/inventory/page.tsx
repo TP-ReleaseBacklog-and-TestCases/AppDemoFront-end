@@ -1,26 +1,28 @@
+'use client'
 import { ManageInventoryForm } from '@/ui/product/components/ManageInventoryForm'
 import { ImageUploader } from '@/ui/product/components/ImageUploader'
+import { useProduct } from '@/ui/product/hooks/useProduct'
+import { messages } from '@/messages'
 
-export default async function InventoryPage({ params }: { params: { id: string } }) {
-    const res = await fetch(`http://localhost:3000/api/product?id=${params.id}`)
-    const product = await res.json()
+export default function InventoryPage({ params }: { params: { id: string } }) {
+  const { data, isLoading } = useProduct(params.id)
 
-    return (
-        <div className="max-w-2xl mx-auto p-6 space-y-8">
-            <h1 className="text-3xl font-bold">Gestionar Inventario e Imágenes</h1>
+  if (isLoading) return <p>Cargando…</p>
+  if (!data) return <p>{messages.error.loadProducts}</p>
 
-            <section>
-                <h2 className="text-2xl font-semibold mb-4">Stock</h2>
-                <ManageInventoryForm
-                    productId={params.id}
-                    initialStock={product.stock}
-                />
-            </section>
+  return (
+    <div className="max-w-2xl mx-auto p-6 space-y-8">
+      <h1 className="text-3xl font-bold">Gestionar Inventario e Imágenes</h1>
 
-            <section>
-                <h2 className="text-2xl font-semibold mb-4">Imágenes</h2>
-                <ImageUploader productId={params.id} />
-            </section>
-        </div>
-    )
+      <section>
+        <h2 className="text-2xl font-semibold mb-4">Stock</h2>
+        <ManageInventoryForm productId={params.id} initialStock={data.stock} />
+      </section>
+
+      <section>
+        <h2 className="text-2xl font-semibold mb-4">Imágenes</h2>
+        <ImageUploader productId={params.id} />
+      </section>
+    </div>
+  )
 }
