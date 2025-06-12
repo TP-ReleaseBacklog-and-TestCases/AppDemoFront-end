@@ -4,6 +4,7 @@ import { Button, Card, CardBody, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { ProductCard, Product } from "../components/product-card";
+import { CATEGORY_IMAGES } from "../constants/categoryImages";
 
 const featuredProducts: Product[] = [
   {
@@ -13,7 +14,7 @@ const featuredProducts: Product[] = [
     price: 1899,
     rating: 4.8,
     category: "Electronics",
-    image: "laptop",
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80",
     stock: 15
   },
   {
@@ -23,7 +24,7 @@ const featuredProducts: Product[] = [
     price: 299,
     rating: 4.7,
     category: "Electronics",
-    image: "headphones",
+    image: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80",
     stock: 32
   },
   {
@@ -33,7 +34,7 @@ const featuredProducts: Product[] = [
     price: 159,
     rating: 4.5,
     category: "Furniture",
-    image: "furniture",
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80",
     stock: 8
   },
   {
@@ -43,7 +44,7 @@ const featuredProducts: Product[] = [
     price: 899,
     rating: 4.9,
     category: "Electronics",
-    image: "camera",
+    image: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80",
     stock: 5
   }
 ];
@@ -100,7 +101,7 @@ export const HomePage: React.FC = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <img
-                src="https://img.heroui.chat/image/dashboard?w=600&h=400&u=homepage-hero"
+                src={CATEGORY_IMAGES["shopping_experience"]}
                 alt="Shopping Experience"
                 className="rounded-lg shadow-lg w-full"
               />
@@ -204,7 +205,7 @@ export const HomePage: React.FC = () => {
                     <Divider className="my-4" />
                     <div className="flex items-center">
                       <img
-                        src={`https://img.heroui.chat/image/avatar?w=40&h=40&u=user${item}`}
+                        src={CATEGORY_IMAGES["perfil"]}
                         alt="Customer"
                         className="rounded-full w-10 h-10 mr-3"
                       />
@@ -252,7 +253,7 @@ export const HomePage: React.FC = () => {
                   </div>
                 </div>
                 <img
-                  src="https://img.heroui.chat/image/shopping?w=300&h=200&u=cta-section"
+                  src={CATEGORY_IMAGES["shopping"]}
                   alt="Shopping"
                   className="rounded-lg w-full md:w-auto md:max-w-[300px]"
                 />

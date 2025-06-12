@@ -3,6 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { Card, CardBody, Button, Chip, Link, Tooltip } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { CATEGORY_IMAGES } from "../constants/categoryImages";
 
 export interface Product {
   id: string;
@@ -49,7 +50,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <CardBody className="p-0 overflow-visible">
         <div className="relative">
           <img
-            src={product.image}
+            src={CATEGORY_IMAGES[product.image] || product.image}
             alt={product.name}
             className="w-full h-48 object-cover"
           />
