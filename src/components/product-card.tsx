@@ -49,7 +49,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <CardBody className="p-0 overflow-visible">
         <div className="relative">
           <img
-            src={`https://img.heroui.chat/image/${product.category.toLowerCase()}?w=400&h=300&u=${product.id}`}
+            src={product.image}
             alt={product.name}
             className="w-full h-48 object-cover"
           />

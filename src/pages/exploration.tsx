@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { SearchFilters } from "../components/search-filters";
 import { ProductCard, Product } from "../components/product-card";
 import { PaginationControl } from "../components/pagination-control";
+import { CATEGORY_IMAGES } from "../constants/categoryImages";
 
 // Mock data generator
 const generateMockProducts = (count: number): Product[] => {
@@ -25,7 +26,7 @@ const generateMockProducts = (count: number): Product[] => {
       price,
       rating: parseFloat(rating),
       category: categories[categoryIndex],
-      image: categories[categoryIndex].toLowerCase(),
+      image: CATEGORY_IMAGES[categories[categoryIndex].toLowerCase()],
       stock
     });
   }

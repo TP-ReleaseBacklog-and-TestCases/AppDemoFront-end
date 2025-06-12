@@ -4,6 +4,7 @@ import { Button, Chip, Divider, Tabs, Tab, Card, CardBody, Spinner } from "@next
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { Product } from "../components/product-card";
+import { CATEGORY_IMAGES } from "../constants/categoryImages";
 
 // Mock product data
 const mockProduct: Product = {
@@ -13,7 +14,7 @@ const mockProduct: Product = {
   price: 1899,
   rating: 4.8,
   category: "Electronics",
-  image: "laptop",
+  image: CATEGORY_IMAGES["electronics"],
   stock: 15
 };
 
@@ -112,7 +113,7 @@ export const ProductDetailPage: React.FC = () => {
           <Card className="overflow-hidden">
             <CardBody className="p-0">
               <img
-                src={`https://img.heroui.chat/image/${product.category.toLowerCase()}?w=600&h=500&u=${product.id}`}
+                src={product.image}
                 alt={product.name}
                 className="w-full h-auto object-cover"
               />
@@ -124,7 +125,7 @@ export const ProductDetailPage: React.FC = () => {
               <Card key={i} isPressable className="overflow-hidden">
                 <CardBody className="p-0">
                   <img
-                    src={`https://img.heroui.chat/image/${product.category.toLowerCase()}?w=150&h=150&u=${product.id}-${i}`}
+                    src={product.image}
                     alt={`${product.name} view ${i}`}
                     className="w-full h-auto object-cover"
                   />
@@ -402,7 +403,7 @@ export const ProductDetailPage: React.FC = () => {
                         <div className="flex justify-between items-start mb-2">
                           <div className="flex items-center">
                             <img
-                              src={`https://img.heroui.chat/image/avatar?w=40&h=40&u=reviewer${i}`}
+                              src={product.image}
                               alt={`Reviewer ${i}`}
                               className="rounded-full w-10 h-10 mr-3"
                             />
@@ -460,7 +461,7 @@ export const ProductDetailPage: React.FC = () => {
             <Card key={i} isPressable className="overflow-hidden">
               <CardBody className="p-0">
                 <img
-                  src={`https://img.heroui.chat/image/electronics?w=300&h=200&u=related-${i}`}
+                  src={CATEGORY_IMAGES["electronics"]}
                   alt={`Related Product ${i}`}
                   className="w-full h-40 object-cover"
                 />

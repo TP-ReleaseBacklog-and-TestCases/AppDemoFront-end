@@ -250,7 +250,7 @@ export const SellerDashboardPage: React.FC = () => {
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <img
-                        src={`https://img.heroui.chat/image/${product.category.toLowerCase()}?w=40&h=40&u=${product.id}`}
+                        src={product.image}
                         alt={product.name}
                         className="w-10 h-10 rounded-md object-cover"
                       />
