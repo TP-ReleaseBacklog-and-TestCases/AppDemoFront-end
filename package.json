@@ -1,33 +1,39 @@
 {
-  "name": "appdemofront-end",
-  "version": "0.1.0",
+  "name": "ecommerce-platform",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vite",
+    "build": "tsc --noCheck && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.80.6",
-    "next": "15.3.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "uuid": "^11.1.0",
-    "zod": "^3.25.56",
-    "@heroui/react": "^1.0.0",
-    "@iconify/react": "^4.1.0"
+    "@heroui/react": "2.7.10",
+    "@heroui/use-theme": "2.1.6",
+    "@iconify/react": "latest",
+    "framer-motion": "^11.18.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "5.3.4",
+    "source-map-js": "^1.2.1"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/uuid": "^10.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.3",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/react-router-dom": "^5.3.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "10.4.20",
+    "tailwindcss": "3.4.17",
+    "postcss": "8.4.49",
+    "typescript": "5.7.3",
+    "vite": "^6.0.11",
+    "@babel/core": "^7.26.10",
+    "@babel/generator": "^7.27.0",
+    "@babel/preset-react": "^7.26.3",
+    "@babel/preset-typescript": "^7.27.0",
+    "@babel/traverse": "^7.27.0",
+    "@babel/types": "^7.27.0"
   }
 }
