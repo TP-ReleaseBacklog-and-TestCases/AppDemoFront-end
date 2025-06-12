@@ -4,11 +4,13 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Dropdown,
 import { Icon } from "@iconify/react";
 import { useAuth } from "../context/auth-context";
 import { CATEGORY_IMAGES } from "../constants/categoryImages";
+import { useLanguage } from "../context/language-context";
 
 export const NavbarComponent = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const history = useHistory();
   const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
 
   const handleLogin = () => {
     history.push("/login");
@@ -31,24 +33,41 @@ export const NavbarComponent = () => {
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem isActive={location.pathname === "/"}>
           <Link as={RouterLink} to="/" color="foreground">
-            Home
+            {t("home")}
           </Link>
         </NavbarItem>
         <NavbarItem isActive={location.pathname.startsWith("/explore")}>
           <Link as={RouterLink} to="/explore" color="foreground">
-            Explore
+            {t("explore")}
           </Link>
         </NavbarItem>
         {user?.role === "seller" && (
           <NavbarItem isActive={location.pathname.startsWith("/seller")}>
             <Link as={RouterLink} to="/seller/dashboard" color="foreground">
-              Seller Dashboard
+              {t("sellerDashboard")}
             </Link>
           </NavbarItem>
         )}
       </NavbarContent>
 
       <NavbarContent justify="end">
+        <Dropdown>
+          <DropdownTrigger>
+            <Button
+              variant="light"
+              size="md"
+              endContent={<Icon icon="lucide:globe" className="text-default-800" />}
+              className="mr-2"
+            >
+              {language.toUpperCase()}
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu onAction={(key) => setLanguage(key as "es" | "en")}
+            aria-label="Language">
+            <DropdownItem key="en">{t("languageEnglish")}</DropdownItem>
+            <DropdownItem key="es">{t("languageSpanish")}</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
         {isAuthenticated ? (
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
@@ -69,25 +88,25 @@ export const NavbarComponent = () => {
               </DropdownItem>
               <DropdownItem key="settings">
                 <Link as={RouterLink} to="/account/settings" color="foreground" className="w-full block">
-                  Account Settings
+                  {t("accountSettings")}
                 </Link>
               </DropdownItem>
               {user?.role === "seller" && (
                 <DropdownItem key="dashboard">
                   <Link as={RouterLink} to="/seller/dashboard" color="foreground" className="w-full block">
-                    Seller Dashboard
+                    {t("sellerDashboard")}
                   </Link>
                 </DropdownItem>
               )}
               <DropdownItem key="logout" color="danger" onPress={handleLogout}>
-                Log Out
+                {t("logout")}
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
         ) : (
           <NavbarItem>
             <Button as={RouterLink} color="primary" to="/login" variant="flat">
-              Login
+              {t("login")}
             </Button>
           </NavbarItem>
         )}

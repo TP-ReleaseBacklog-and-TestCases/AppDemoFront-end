@@ -4,13 +4,15 @@ import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/auth-context";
 import { CATEGORY_IMAGES } from "../constants/categoryImages";
+import { useLanguage } from "../context/language-context";
 
 export const AccountSettingsPage: React.FC = () => {
   const { user, updateUserSettings, isAuthenticated } = useAuth();
+  const { language: currentLang, setLanguage: setAppLanguage, t } = useLanguage();
   const [activeTab, setActiveTab] = React.useState("profile");
   const [name, setName] = React.useState(user?.name || "");
   const [email, setEmail] = React.useState(user?.email || "");
-  const [language, setLanguage] = React.useState(user?.settings?.language || "English");
+  const [language, setLanguage] = React.useState<"en" | "es">(user?.settings?.language || currentLang);
   const [notifications, setNotifications] = React.useState(user?.settings?.notifications || false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [successMessage, setSuccessMessage] = React.useState("");
@@ -22,7 +24,7 @@ export const AccountSettingsPage: React.FC = () => {
       setLanguage(user.settings.language);
       setNotifications(user.settings.notifications);
     }
-  }, [user]);
+  }, [user, setAppLanguage]);
 
   const handleProfileUpdate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,6 +52,7 @@ export const AccountSettingsPage: React.FC = () => {
         language,
         notifications,
       });
+      setAppLanguage(language);
       setIsLoading(false);
       setSuccessMessage("Settings updated successfully");
 
@@ -80,8 +83,8 @@ export const AccountSettingsPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-1">Account Settings</h1>
-        <p className="text-default-500">Manage your account preferences and settings</p>
+        <h1 className="text-2xl font-bold mb-1">{t("accountSettingsTitle")}</h1>
+        <p className="text-default-500">{t("accountSettingsDescription")}</p>
       </div>
 
       {successMessage && (
@@ -117,7 +120,7 @@ export const AccountSettingsPage: React.FC = () => {
               title={
                 <div className="flex items-center gap-2">
                   <Icon icon="lucide:user" />
-                  <span>Profile</span>
+                  <span>{t("profile")}</span>
                 </div>
               }
             >
@@ -141,29 +144,29 @@ export const AccountSettingsPage: React.FC = () => {
                         </Button>
                       </div>
                       <p className="text-center text-default-500 text-sm">
-                        Click the camera icon to upload a new photo
+                        {t("clickUploadPhoto")}
                       </p>
                     </div>
 
                     <div className="md:w-2/3 space-y-4">
                       <Input
-                        label="Full Name"
-                        placeholder="Enter your full name"
+                        label={t("fullName")}
+                        placeholder={t("enterFullName")}
                         value={name}
                         onValueChange={setName}
                       />
 
                       <Input
-                        label="Email"
-                        placeholder="Enter your email"
+                        label={t("email")}
+                        placeholder={t("enterEmail")}
                         type="email"
                         value={email}
                         onValueChange={setEmail}
                       />
 
                       <Input
-                        label="Role"
-                        value={user?.role === "seller" ? "Seller" : "Buyer"}
+                        label={t("role")}
+                        value={user?.role === "seller" ? t("seller") : t("buyer")}
                         isReadOnly
                       />
 
@@ -175,7 +178,7 @@ export const AccountSettingsPage: React.FC = () => {
                           type="submit"
                           isLoading={isLoading}
                         >
-                          Save Changes
+                          {t("saveChanges")}
                         </Button>
                       </div>
                     </div>
@@ -189,26 +192,30 @@ export const AccountSettingsPage: React.FC = () => {
               title={
                 <div className="flex items-center gap-2">
                   <Icon icon="lucide:settings" />
-                  <span>Settings</span>
+                  <span>{t("settings")}</span>
                 </div>
               }
             >
               <div className="p-6">
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Preferences</h3>
+                    <h3 className="text-lg font-semibold mb-4">{t("preferences")}</h3>
 
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm mb-2">Language</label>
+                        <label className="block text-sm mb-2">{t("language")}</label>
                         <Select
-                          placeholder="Select language"
+                          placeholder={t("language")}
                           selectedKeys={[language]}
-                          onChange={(e) => setLanguage(e.target.value)}
+                          onChange={(e) => {
+                            const value = e.target.value as "en" | "es";
+                            setLanguage(value);
+                            setAppLanguage(value);
+                          }}
                           className="max-w-xs"
                         >
-                          <SelectItem key="English">English</SelectItem>
-                          <SelectItem key="Spanish">Spanish</SelectItem>
+                          <SelectItem key="English">{t("languageEnglish")}</SelectItem>
+                          <SelectItem key="Spanish">{t("languageSpanish")}</SelectItem>
                         </Select>
                       </div>
                     </div>
@@ -217,13 +224,13 @@ export const AccountSettingsPage: React.FC = () => {
                   <Divider />
 
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Notifications</h3>
+                    <h3 className="text-lg font-semibold mb-4">{t("notifications")}</h3>
 
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <div>
-                          <p className="font-medium">Email Notifications</p>
-                          <p className="text-default-500 text-sm">Receive emails about your account activity</p>
+                          <p className="font-medium">{t("emailNotifications")}</p>
+                          <p className="text-default-500 text-sm">{t("emailNotificationsDesc")}</p>
                         </div>
                         <Switch
                           isSelected={notifications}
@@ -233,16 +240,16 @@ export const AccountSettingsPage: React.FC = () => {
 
                       <div className="flex justify-between items-center">
                         <div>
-                          <p className="font-medium">Order Updates</p>
-                          <p className="text-default-500 text-sm">Receive updates about your orders</p>
+                          <p className="font-medium">{t("orderUpdates")}</p>
+                          <p className="text-default-500 text-sm">{t("orderUpdatesDesc")}</p>
                         </div>
                         <Switch defaultSelected />
                       </div>
 
                       <div className="flex justify-between items-center">
                         <div>
-                          <p className="font-medium">Marketing Emails</p>
-                          <p className="text-default-500 text-sm">Receive emails about promotions and deals</p>
+                          <p className="font-medium">{t("marketingEmails")}</p>
+                          <p className="text-default-500 text-sm">{t("marketingEmailsDesc")}</p>
                         </div>
                         <Switch />
                       </div>
@@ -257,7 +264,7 @@ export const AccountSettingsPage: React.FC = () => {
                       onPress={handleSettingsUpdate}
                       isLoading={isLoading}
                     >
-                      Save Settings
+                      {t("saveSettings")}
                     </Button>
                   </div>
                 </div>
@@ -269,37 +276,37 @@ export const AccountSettingsPage: React.FC = () => {
               title={
                 <div className="flex items-center gap-2">
                   <Icon icon="lucide:shield" />
-                  <span>Security</span>
+                  <span>{t("securityTab")}</span>
                 </div>
               }
             >
               <div className="p-6">
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Change Password</h3>
+                    <h3 className="text-lg font-semibold mb-4">{t("changePassword")}</h3>
 
                     <div className="space-y-4 max-w-md">
                       <Input
-                        label="Current Password"
-                        placeholder="Enter your current password"
+                        label={t("currentPassword")}
+                        placeholder={t("currentPassword")}
                         type="password"
                       />
 
                       <Input
-                        label="New Password"
-                        placeholder="Enter your new password"
+                        label={t("newPassword")}
+                        placeholder={t("newPassword")}
                         type="password"
                       />
 
                       <Input
-                        label="Confirm New Password"
-                        placeholder="Confirm your new password"
+                        label={t("confirmNewPassword")}
+                        placeholder={t("confirmNewPassword")}
                         type="password"
                       />
 
                       <div className="flex justify-end">
                         <Button color="primary">
-                          Update Password
+                          {t("updatePassword")}
                         </Button>
                       </div>
                     </div>
@@ -308,11 +315,11 @@ export const AccountSettingsPage: React.FC = () => {
                   <Divider />
 
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Two-Factor Authentication</h3>
+                    <h3 className="text-lg font-semibold mb-4">{t("twoFactorAuth")}</h3>
 
                     <div className="flex justify-between items-center">
                       <div>
-                        <p className="font-medium">Enable 2FA</p>
+                        <p className="font-medium">{t("enable2FA")}</p>
                         <p className="text-default-500 text-sm">Add an extra layer of security to your account</p>
                       </div>
                       <Switch />
@@ -322,17 +329,17 @@ export const AccountSettingsPage: React.FC = () => {
                   <Divider />
 
                   <div>
-                    <h3 className="text-lg font-semibold mb-4 text-danger">Danger Zone</h3>
+                    <h3 className="text-lg font-semibold mb-4 text-danger">{t("dangerZone")}</h3>
 
                     <Card className="border border-danger-200 bg-danger-50">
                       <CardBody className="p-4">
                         <div className="flex justify-between items-center">
                           <div>
-                            <p className="font-medium">Delete Account</p>
-                            <p className="text-default-500 text-sm">Permanently delete your account and all data</p>
+                            <p className="font-medium">{t("deleteAccount")}</p>
+                            <p className="text-default-500 text-sm">{t("deleteAccountDesc")}</p>
                           </div>
                           <Button color="danger" variant="flat">
-                            Delete Account
+                            {t("deleteAccount")}
                           </Button>
                         </div>
                       </CardBody>

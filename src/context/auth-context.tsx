@@ -1,4 +1,5 @@
 import React from "react";
+import { Language } from "./language-context";
 
 type User = {
   id: string;
@@ -6,7 +7,7 @@ type User = {
   email: string;
   role: "buyer" | "seller";
   settings: {
-    language: string;
+    language: Language;
     notifications: boolean;
   };
 };
@@ -36,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email: "demo@example.com",
         role: "buyer",
         settings: {
-          language: "English",
+          language: "en",
           notifications: true,
         },
       });
@@ -47,7 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email: "seller@example.com",
         role: "seller",
         settings: {
-          language: "English",
+          language: "en",
           notifications: true,
         },
       });
@@ -65,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email,
       role,
       settings: {
-        language: "English",
+        language: "en",
         notifications: true,
       },
     });

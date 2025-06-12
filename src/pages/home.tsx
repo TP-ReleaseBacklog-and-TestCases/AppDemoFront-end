@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { ProductCard, Product } from "../components/product-card";
 import { CATEGORY_IMAGES } from "../constants/categoryImages";
+import { useLanguage } from "../context/language-context";
 
 const featuredProducts: Product[] = [
   {
@@ -58,6 +59,7 @@ const categories = [
 ];
 
 export const HomePage: React.FC = () => {
+  const { t } = useLanguage();
   return (
     <div>
       {/* Hero Section */}
@@ -70,8 +72,8 @@ export const HomePage: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">Discover Amazing Products</h1>
-              <p className="text-lg mb-6">Find everything you need at the best prices with our curated selection of top-quality products.</p>
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">{t("discoverProducts")}</h1>
+              <p className="text-lg mb-6">{t("findBestPrices")}</p>
               <div className="flex flex-wrap gap-3">
                 <Button
                   as={RouterLink}
@@ -81,7 +83,7 @@ export const HomePage: React.FC = () => {
                   size="lg"
                   startContent={<Icon icon="lucide:search" />}
                 >
-                  Explore Now
+                  {t("exploreNow")}
                 </Button>
                 <Button
                   as={RouterLink}
@@ -90,7 +92,7 @@ export const HomePage: React.FC = () => {
                   color="default"
                   size="lg"
                 >
-                  Join Us
+                  {t("joinUs")}
                 </Button>
               </div>
             </motion.div>
@@ -114,8 +116,8 @@ export const HomePage: React.FC = () => {
       <section className="py-16 bg-content1">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-2">Shop by Category</h2>
-            <p className="text-default-500">Browse our wide selection of products by category</p>
+            <h2 className="text-3xl font-bold mb-2">{t("shopByCategory")}</h2>
+            <p className="text-default-500">{t("browseByCategory")}</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -149,7 +151,7 @@ export const HomePage: React.FC = () => {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-bold">Featured Products</h2>
+            <h2 className="text-2xl font-bold">{t("featuredProducts")}</h2>
             <Button
               as={RouterLink}
               to="/explore"
@@ -157,7 +159,7 @@ export const HomePage: React.FC = () => {
               color="primary"
               endContent={<Icon icon="lucide:arrow-right" />}
             >
-              View All
+              {t("viewAll")}
             </Button>
           </div>
 
@@ -180,8 +182,8 @@ export const HomePage: React.FC = () => {
       <section className="py-16 bg-content1">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-2">What Our Customers Say</h2>
-            <p className="text-default-500">Don't just take our word for it</p>
+            <h2 className="text-3xl font-bold mb-2">{t("whatCustomersSay")}</h2>
+            <p className="text-default-500">{t("dontJustTakeWord")}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -229,8 +231,8 @@ export const HomePage: React.FC = () => {
             <CardBody className="p-8">
               <div className="flex flex-col md:flex-row items-center justify-between">
                 <div className="mb-6 md:mb-0">
-                  <h2 className="text-3xl font-bold mb-2">Ready to Start Shopping?</h2>
-                  <p className="text-white/80 mb-4">Join thousands of satisfied customers today.</p>
+                  <h2 className="text-3xl font-bold mb-2">{t("readyToShop")}</h2>
+                  <p className="text-white/80 mb-4">{t("joinThousands")}</p>
                   <div className="flex gap-3">
                     <Button
                       as={RouterLink}
@@ -239,7 +241,7 @@ export const HomePage: React.FC = () => {
                       variant="solid"
                       size="lg"
                     >
-                      Explore Products
+                      {t("exploreProducts")}
                     </Button>
                     <Button
                       as={RouterLink}
@@ -248,7 +250,7 @@ export const HomePage: React.FC = () => {
                       color="default"
                       size="lg"
                     >
-                      Create Account
+                      {t("createAccount")}
                     </Button>
                   </div>
                 </div>
