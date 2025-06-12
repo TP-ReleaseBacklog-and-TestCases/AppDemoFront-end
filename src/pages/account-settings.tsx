@@ -3,6 +3,7 @@ import { Card, CardBody, CardHeader, Input, Button, Switch, Tabs, Tab, Select, S
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/auth-context";
+import { CATEGORY_IMAGES } from "../constants/categoryImages";
 
 export const AccountSettingsPage: React.FC = () => {
   const { user, updateUserSettings, isAuthenticated } = useAuth();
@@ -126,7 +127,7 @@ export const AccountSettingsPage: React.FC = () => {
                     <div className="md:w-1/3 flex flex-col items-center">
                       <div className="relative mb-4">
                         <img
-                          src={`https://img.heroui.chat/image/avatar?w=150&h=150&u=${user?.id}`}
+                          src={CATEGORY_IMAGES["perfil"]}
                           alt="Profile"
                           className="w-32 h-32 rounded-full object-cover"
                         />
@@ -208,8 +209,6 @@ export const AccountSettingsPage: React.FC = () => {
                         >
                           <SelectItem key="English">English</SelectItem>
                           <SelectItem key="Spanish">Spanish</SelectItem>
-                          <SelectItem key="French">French</SelectItem>
-                          <SelectItem key="German">German</SelectItem>
                         </Select>
                       </div>
                     </div>

@@ -3,6 +3,7 @@ import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../context/auth-context";
+import { CATEGORY_IMAGES } from "../constants/categoryImages";
 
 export const NavbarComponent = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -58,7 +59,7 @@ export const NavbarComponent = () => {
                 color="primary"
                 name={user?.name}
                 size="sm"
-                src={`https://img.heroui.chat/image/avatar?w=40&h=40&u=${user?.id}`}
+                src={CATEGORY_IMAGES["perfil"]}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="User Actions" variant="flat">
