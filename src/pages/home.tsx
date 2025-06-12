@@ -1,6 +1,6 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Button, Card, CardBody, Divider } from "@heroui/react";
+import { Button, Card, CardBody, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { ProductCard, Product } from "../components/product-card";

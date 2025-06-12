@@ -1,6 +1,6 @@
 import React from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
-import { Card, CardBody, Input, Button, Link, RadioGroup, Radio, Divider } from "@heroui/react";
+import { Card, CardBody, Input, Button, Link, RadioGroup, Radio, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/auth-context";

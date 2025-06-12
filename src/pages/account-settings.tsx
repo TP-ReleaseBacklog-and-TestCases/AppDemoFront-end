@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, CardHeader, Input, Button, Switch, Tabs, Tab, Select, SelectItem, Divider } from "@heroui/react";
+import { Card, CardBody, CardHeader, Input, Button, Switch, Tabs, Tab, Select, SelectItem, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/auth-context";

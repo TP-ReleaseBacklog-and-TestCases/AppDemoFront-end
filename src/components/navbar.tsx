@@ -1,6 +1,6 @@
 import React from "react";
 import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@heroui/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../context/auth-context";
 

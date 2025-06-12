@@ -10,9 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@heroui/react": "2.7.10",
-    "@heroui/use-theme": "2.1.6",
     "@iconify/react": "latest",
+    "@nextui-org/react": "^2.6.11",
     "framer-motion": "^11.18.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

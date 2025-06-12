@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Select, SelectItem, Slider, Button, Chip, Divider } from "@heroui/react";
+import { Input, Select, SelectItem, Slider, Button, Chip, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 

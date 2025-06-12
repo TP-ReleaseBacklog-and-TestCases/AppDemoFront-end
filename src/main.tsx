@@ -1,4 +1,4 @@
-import { HeroUIProvider, ToastProvider } from "@heroui/react";
+import { NextUIProvider  } from "@nextui-org/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
@@ -8,11 +8,10 @@ import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <HeroUIProvider>
-      <ToastProvider />
+    <NextUIProvider>
       <main className="text-foreground bg-background">
         <App />
       </main>
-    </HeroUIProvider>
+    </NextUIProvider>
   </React.StrictMode>,
 );

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, Input, Textarea, Select, SelectItem, Button, Divider } from "@heroui/react";
+import { Card, CardBody, Input, Textarea, Select, SelectItem, Button, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { Product } from "./product-card";

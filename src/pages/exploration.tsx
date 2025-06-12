@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { Card, CardBody, Spinner } from "@heroui/react";
+import { Card, CardBody, Spinner } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { SearchFilters } from "../components/search-filters";

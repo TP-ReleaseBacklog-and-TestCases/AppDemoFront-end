@@ -1,6 +1,6 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Card, CardBody, Button, Chip, Link, Tooltip } from "@heroui/react";
+import { Card, CardBody, Button, Chip, Link, Tooltip } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 

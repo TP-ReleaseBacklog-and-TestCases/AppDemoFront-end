@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@heroui/react";
+import { Link } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 
 export const Footer = () => {

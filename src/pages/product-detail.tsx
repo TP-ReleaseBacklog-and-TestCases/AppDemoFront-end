@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Button, Chip, Divider, Tabs, Tab, Card, CardBody, Spinner } from "@heroui/react";
+import { Button, Chip, Divider, Tabs, Tab, Card, CardBody, Spinner } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { Product } from "../components/product-card";
