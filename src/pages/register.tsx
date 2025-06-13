@@ -4,10 +4,12 @@ import { Card, CardBody, Input, Button, Link, RadioGroup, Radio, Divider } from 
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/auth-context";
+import { useLanguage } from "../context/language-context";
 
 export const RegisterPage: React.FC = () => {
   const { register } = useAuth();
   const history = useHistory();
+  const { t } = useLanguage();
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -20,23 +22,23 @@ export const RegisterPage: React.FC = () => {
     const newErrors: Record<string, string> = {};
 
     if (!name.trim()) {
-      newErrors.name = "Name is required";
+      newErrors.name = t("nameRequired");
     }
 
     if (!email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = t("emailRequired");
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = t("emailInvalid");
     }
 
     if (!password) {
-      newErrors.password = "Password is required";
+      newErrors.password = t("passwordRequired");
     } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = t("passwordLength");
     }
 
     if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = t("passwordsMismatch");
     }
 
     setErrors(newErrors);
@@ -57,7 +59,7 @@ export const RegisterPage: React.FC = () => {
       history.push("/");
     } catch (err) {
       setErrors({
-        form: "Registration failed. Please try again."
+        form: t("registrationFailed")
       });
     } finally {
       setIsLoading(false);
@@ -75,8 +77,8 @@ export const RegisterPage: React.FC = () => {
         <Card className="w-full">
           <CardBody className="p-8">
             <div className="text-center mb-6">
-              <h1 className="text-2xl font-bold">Create an Account</h1>
-              <p className="text-default-500">Join our marketplace today</p>
+              <h1 className="text-2xl font-bold">{t("createAccountTitle")}</h1>
+              <p className="text-default-500">{t("joinMarketplace")}</p>
             </div>
 
             {errors.form && (
@@ -87,8 +89,8 @@ export const RegisterPage: React.FC = () => {
 
             <form onSubmit={handleRegister} className="space-y-4">
               <Input
-                label="Full Name"
-                placeholder="Enter your full name"
+                label={t("nameLabel")}
+                placeholder={t("namePlaceholder")}
                 value={name}
                 onValueChange={setName}
                 startContent={<Icon icon="lucide:user" className="text-default-400" />}
@@ -98,8 +100,8 @@ export const RegisterPage: React.FC = () => {
               />
 
               <Input
-                label="Email"
-                placeholder="Enter your email"
+                label={t("emailLabel")}
+                placeholder={t("emailPlaceholder")}
                 type="email"
                 value={email}
                 onValueChange={setEmail}
@@ -110,8 +112,8 @@ export const RegisterPage: React.FC = () => {
               />
 
               <Input
-                label="Password"
-                placeholder="Create a password"
+                label={t("passwordLabel")}
+                placeholder={t("passwordPlaceholder")}
                 type="password"
                 value={password}
                 onValueChange={setPassword}
@@ -122,8 +124,8 @@ export const RegisterPage: React.FC = () => {
               />
 
               <Input
-                label="Confirm Password"
-                placeholder="Confirm your password"
+                label={t("confirmPasswordLabel")}
+                placeholder={t("confirmPasswordPlaceholder")}
                 type="password"
                 value={confirmPassword}
                 onValueChange={setConfirmPassword}
@@ -134,14 +136,14 @@ export const RegisterPage: React.FC = () => {
               />
 
               <div>
-                <p className="text-sm mb-2">I want to register as:</p>
+                <p className="text-sm mb-2">{t("registerAs")}</p>
                 <RadioGroup
                   orientation="horizontal"
                   value={role}
                   onValueChange={setRole}
                 >
-                  <Radio value="buyer">Buyer</Radio>
-                  <Radio value="seller">Seller</Radio>
+                  <Radio value="buyer">{t("buyer")}</Radio>
+                  <Radio value="seller">{t("seller")}</Radio>
                 </RadioGroup>
               </div>
 
@@ -151,7 +153,7 @@ export const RegisterPage: React.FC = () => {
                 className="w-full"
                 isLoading={isLoading}
               >
-                Create Account
+                {t("createAccount")}
               </Button>
             </form>
 
@@ -163,7 +165,7 @@ export const RegisterPage: React.FC = () => {
                 className="w-full"
                 startContent={<Icon icon="logos:google-icon" />}
               >
-                Sign up with Google
+                {t("signUpWithGoogle")}
               </Button>
 
               <Button
@@ -171,25 +173,25 @@ export const RegisterPage: React.FC = () => {
                 className="w-full"
                 startContent={<Icon icon="logos:facebook" />}
               >
-                Sign up with Facebook
+                {t("signUpWithFacebook")}
               </Button>
             </div>
 
             <div className="text-center mt-6">
               <p className="text-default-500">
-                Already have an account?{" "}
+                {t("alreadyHaveAccount")}{" "}
                 <Link as={RouterLink} to="/login" color="primary">
-                  Sign in
+                  {t("signIn")}
                 </Link>
               </p>
             </div>
 
             <div className="text-center mt-4">
               <p className="text-xs text-default-400">
-                By signing up, you agree to our{" "}
-                <Link href="#" size="sm">Terms of Service</Link>{" "}
+                {t("termsAgreement")}{" "}
+                <Link href="#" size="sm">{t("termsOfService")}</Link>{" "}
                 and{" "}
-                <Link href="#" size="sm">Privacy Policy</Link>
+                <Link href="#" size="sm">{t("privacyPolicy")}</Link>
               </p>
             </div>
           </CardBody>

@@ -4,10 +4,12 @@ import { Card, CardBody, Input, Button, Link, Checkbox, Divider } from "@nextui-
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/auth-context";
+import { useLanguage } from "../context/language-context";
 
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const history = useHistory();
+  const { t } = useLanguage();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [rememberMe, setRememberMe] = React.useState(false);
@@ -18,7 +20,7 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
 
     if (!email || !password) {
-      setError("Please enter both email and password");
+      setError(t("emailRequired"));
       return;
     }
 
@@ -29,7 +31,7 @@ export const LoginPage: React.FC = () => {
       await login(email, password);
       history.push("/");
     } catch (err) {
-      setError("Invalid email or password");
+      setError(t("invalidCredentials"));
     } finally {
       setIsLoading(false);
     }
@@ -46,8 +48,8 @@ export const LoginPage: React.FC = () => {
         <Card className="w-full">
           <CardBody className="p-8">
             <div className="text-center mb-6">
-              <h1 className="text-2xl font-bold">Welcome Back</h1>
-              <p className="text-default-500">Sign in to your account</p>
+              <h1 className="text-2xl font-bold">{t("welcomeBack")}</h1>
+              <p className="text-default-500">{t("signInToAccount")}</p>
             </div>
 
             {error && (
@@ -58,8 +60,8 @@ export const LoginPage: React.FC = () => {
 
             <form onSubmit={handleLogin} className="space-y-4">
               <Input
-                label="Email"
-                placeholder="Enter your email"
+                label={t("emailLabel")}
+                placeholder={t("emailPlaceholder")}
                 type="email"
                 value={email}
                 onValueChange={setEmail}
@@ -68,8 +70,8 @@ export const LoginPage: React.FC = () => {
               />
 
               <Input
-                label="Password"
-                placeholder="Enter your password"
+                label={t("passwordLabel")}
+                placeholder={t("passwordPlaceholder")}
                 type="password"
                 value={password}
                 onValueChange={setPassword}
@@ -79,9 +81,9 @@ export const LoginPage: React.FC = () => {
 
               <div className="flex items-center justify-between">
                 <Checkbox isSelected={rememberMe} onValueChange={setRememberMe}>
-                  Remember me
+                  {t("rememberMe")}
                 </Checkbox>
-                <Link href="#" size="sm">Forgot password?</Link>
+                <Link href="#" size="sm">{t("forgotPassword")}</Link>
               </div>
 
               <Button
@@ -90,7 +92,7 @@ export const LoginPage: React.FC = () => {
                 className="w-full"
                 isLoading={isLoading}
               >
-                Sign In
+                {t("signIn")}
               </Button>
             </form>
 
@@ -102,7 +104,7 @@ export const LoginPage: React.FC = () => {
                 className="w-full"
                 startContent={<Icon icon="logos:google-icon" />}
               >
-                Continue with Google
+                {t("continueWithGoogle")}
               </Button>
 
               <Button
@@ -110,25 +112,25 @@ export const LoginPage: React.FC = () => {
                 className="w-full"
                 startContent={<Icon icon="logos:facebook" />}
               >
-                Continue with Facebook
+                {t("continueWithFacebook")}
               </Button>
             </div>
 
             <div className="text-center mt-6">
               <p className="text-default-500">
-                Don't have an account?{" "}
+                {t("dontHaveAccount")}{" "}
                 <Link as={RouterLink} to="/register" color="primary">
-                  Sign up
+                  {t("signUp")}
                 </Link>
               </p>
             </div>
 
             <div className="text-center mt-4">
               <p className="text-xs text-default-400">
-                By signing in, you agree to our{" "}
-                <Link href="#" size="sm">Terms of Service</Link>{" "}
+                {t("termsAgreement")}{" "}
+                <Link href="#" size="sm">{t("termsOfService")}</Link>{" "}
                 and{" "}
-                <Link href="#" size="sm">Privacy Policy</Link>
+                <Link href="#" size="sm">{t("privacyPolicy")}</Link>
               </p>
             </div>
           </CardBody>
@@ -136,10 +138,10 @@ export const LoginPage: React.FC = () => {
 
         {/* Demo credentials */}
         <div className="mt-4 p-4 bg-content1 rounded-lg border border-divider">
-          <p className="text-sm font-medium mb-2">Demo Credentials:</p>
+          <p className="text-sm font-medium mb-2">{t("demoCredentials")}</p>
           <div className="space-y-1 text-sm">
-            <p><span className="text-default-500">Buyer:</span> demo@example.com / password</p>
-            <p><span className="text-default-500">Seller:</span> seller@example.com / password</p>
+            <p>{t("demoBuyer")}</p>
+            <p>{t("demoSeller")}</p>
           </div>
         </div>
       </motion.div>
