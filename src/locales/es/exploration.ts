@@ -14,4 +14,12 @@ export default {
     reset: "Restablecer",
     clearAll: "Limpiar todo",
     searchPlaceholder: "Buscar productos...",
+    allCategories: "Todas las categorías",
+    priceRange: "Rango de precios",
+    selectCategory: "Selecciona categoría",
+    sortRelevance: "Relevancia",
+    sortPriceAsc: "Precio: menor a mayor",
+    sortPriceDesc: "Precio: mayor a menor",
+    sortRatingDesc: "Calificación: mayor a menor",
+    sortNewest: "Más nuevos primero",
 };

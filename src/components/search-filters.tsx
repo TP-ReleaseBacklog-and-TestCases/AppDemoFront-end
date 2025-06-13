@@ -2,6 +2,7 @@ import React from "react";
 import { Input, Select, SelectItem, Slider, Button, Chip, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { useLanguage } from "../context/language-context";
 
 interface FilterOptions {
   category: string;
@@ -15,23 +16,6 @@ interface SearchFiltersProps {
   onSortChange: (sortOption: string) => void;
 }
 
-const categories = [
-  { value: "all", label: "All Categories" },
-  { value: "Electronics", label: "Electronics" },
-  { value: "Books", label: "Books" },
-  { value: "Clothing", label: "Clothing" },
-  { value: "Home", label: "Home & Kitchen" },
-  { value: "Sports", label: "Sports & Outdoors" },
-];
-
-const sortOptions = [
-  { value: "relevance", label: "Relevance" },
-  { value: "price_asc", label: "Price: Low to High" },
-  { value: "price_desc", label: "Price: High to Low" },
-  { value: "rating_desc", label: "Rating: High to Low" },
-  { value: "newest", label: "Newest First" },
-];
-
 export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilterChange, onSortChange }) => {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [category, setCategory] = React.useState("all");
@@ -39,6 +23,30 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilter
   const [sortBy, setSortBy] = React.useState("relevance");
   const [showMobileFilters, setShowMobileFilters] = React.useState(false);
   const [activeFilters, setActiveFilters] = React.useState<string[]>([]);
+  const { t } = useLanguage();
+
+  const categories = React.useMemo(
+    () => [
+      { value: "all", label: t("allCategories") },
+      { value: "Electronics", label: t("electronics") },
+      { value: "Books", label: t("books") },
+      { value: "Clothing", label: t("clothing") },
+      { value: "Home", label: t("homeKitchen") },
+      { value: "Sports", label: t("sportsOutdoors") },
+    ],
+    [t]
+  );
+
+  const sortOptions = React.useMemo(
+    () => [
+      { value: "relevance", label: t("sortRelevance") },
+      { value: "price_asc", label: t("sortPriceAsc") },
+      { value: "price_desc", label: t("sortPriceDesc") },
+      { value: "rating_desc", label: t("sortRatingDesc") },
+      { value: "newest", label: t("sortNewest") },
+    ],
+    [t]
+  );
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,7 +141,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilter
       <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
         <form onSubmit={handleSearch} className="flex-grow">
           <Input
-            placeholder="Search products..."
+            placeholder={t("searchPlaceholder")}
             value={searchTerm}
             onValueChange={setSearchTerm}
             startContent={<Icon icon="lucide:search" className="text-default-400" />}
@@ -159,7 +167,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilter
 
         <div className="hidden md:flex items-center gap-2">
           <Select
-            placeholder="Category"
+            placeholder={t("category")}
             selectedKeys={[category]}
             onChange={(e) => handleCategoryChange(e.target.value)}
             className="w-40"
@@ -172,7 +180,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilter
           </Select>
 
           <Select
-            placeholder="Sort by"
+            placeholder={t("sortBy")}
             selectedKeys={[sortBy]}
             onChange={(e) => handleSortChange(e.target.value)}
             className="w-48"
@@ -189,7 +197,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilter
             onPress={() => setShowMobileFilters(!showMobileFilters)}
             startContent={<Icon icon="lucide:sliders" />}
           >
-            More Filters
+            {t("moreFilters")}
           </Button>
         </div>
 
@@ -200,11 +208,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilter
             onPress={() => setShowMobileFilters(!showMobileFilters)}
             startContent={<Icon icon="lucide:sliders" />}
           >
-            Filters
+            {t("filters")}
           </Button>
 
           <Select
-            placeholder="Sort by"
+            placeholder={t("sortBy")}
             selectedKeys={[sortBy]}
             onChange={(e) => handleSortChange(e.target.value)}
             size="sm"
@@ -259,9 +267,9 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilter
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-sm font-semibold mb-3">Category</h3>
+              <h3 className="text-sm font-semibold mb-3">{t("category")}</h3>
               <Select
-                placeholder="Select category"
+                placeholder={t("selectCategory")}
                 selectedKeys={[category]}
                 onChange={(e) => handleCategoryChange(e.target.value)}
                 className="w-full"
@@ -275,7 +283,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilter
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold mb-3">Price Range</h3>
+              <h3 className="text-sm font-semibold mb-3">{t("priceRange")}</h3>
               <div className="px-2">
                 <Slider
                   label="Price"
@@ -306,7 +314,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilter
               onPress={clearAllFilters}
               className="mr-2"
             >
-              Reset
+              {t("reset")}
             </Button>
             <Button
               color="primary"
@@ -315,7 +323,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilter
                 applyFilters(category, priceRange, sortBy);
               }}
             >
-              Apply Filters
+              {t("applyFilters")}
             </Button>
           </div>
         </motion.div>

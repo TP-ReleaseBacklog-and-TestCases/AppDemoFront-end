@@ -32,4 +32,7 @@ export default {
     dangerZone: "Danger Zone",
     deleteAccount: "Delete Account",
     deleteAccountDesc: "Permanently delete your account and all data",
+    profileUpdated: "Profile updated successfully",
+    settingsUpdated: "Settings updated successfully",
+    extraSecurityHint: "Add an extra layer of security to your account",
 };

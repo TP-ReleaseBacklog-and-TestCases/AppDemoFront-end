@@ -7,6 +7,7 @@ import { SearchFilters } from "../components/search-filters";
 import { ProductCard, Product } from "../components/product-card";
 import { PaginationControl } from "../components/pagination-control";
 import { CATEGORY_IMAGES } from "../constants/categoryImages";
+import { useLanguage } from "../context/language-context";
 
 // Mock data generator
 const generateMockProducts = (count: number): Product[] => {
@@ -40,6 +41,7 @@ export const ExplorationPage: React.FC = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const initialCategory = queryParams.get("category") || "all";
+  const { t } = useLanguage();
 
   const [searchTerm, setSearchTerm] = React.useState("");
   const [filteredProducts, setFilteredProducts] = React.useState<Product[]>(allProducts);
@@ -162,9 +164,9 @@ export const ExplorationPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Explore Products</h1>
+        <h1 className="text-2xl font-bold mb-2">{t("exploreProductsTitle")}</h1>
         <p className="text-default-500">
-          Browse our collection of products and find exactly what you need
+          {t("exploreProductsDescription")}
         </p>
       </div>
 
@@ -182,16 +184,16 @@ export const ExplorationPage: React.FC = () => {
         <Card>
           <CardBody className="py-12 text-center">
             <Icon icon="lucide:search-x" className="text-default-400 text-5xl mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No products found</h3>
+            <h3 className="text-xl font-semibold mb-2">{t("noProductsTitle")}</h3>
             <p className="text-default-500">
-              We couldn't find any products matching your search criteria.
+              {t("noProductsDescription")}
             </p>
           </CardBody>
         </Card>
       ) : (
         <>
           <p className="text-default-500 mb-4">
-            Showing {currentProducts.length} of {filteredProducts.length} products
+            {t("showingResults")} {currentProducts.length} {t("of")} {filteredProducts.length} {t("products")}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

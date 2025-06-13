@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Product } from "../components/product-card";
 import { ProductForm } from "../components/product-form";
 import { useAuth } from "../context/auth-context";
+import { useLanguage } from "../context/language-context";
 
 // Mock products data
 const mockProducts: Product[] = [
@@ -62,6 +63,7 @@ const mockProducts: Product[] = [
 
 export const SellerDashboardPage: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [products, setProducts] = React.useState<Product[]>(mockProducts);
   const [isAddModalOpen, setIsAddModalOpen] = React.useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
@@ -135,14 +137,14 @@ export const SellerDashboardPage: React.FC = () => {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <Icon icon="lucide:alert-circle" className="text-danger text-5xl mx-auto mb-4" />
-        <h2 className="text-2xl font-bold mb-2">Access Denied</h2>
-        <p className="text-default-500 mb-6">You need to be logged in as a seller to access this page.</p>
+        <h2 className="text-2xl font-bold mb-2">{t("accessDenied")}</h2>
+        <p className="text-default-500 mb-6">{t("mustBeSeller")}</p>
         <Button
           color="primary"
           href="/login"
           as="a"
         >
-          Login as Seller
+          {t("loginAsSeller")}
         </Button>
       </div>
     );
@@ -152,8 +154,8 @@ export const SellerDashboardPage: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold mb-1">Seller Dashboard</h1>
-          <p className="text-default-500">Manage your products and monitor sales</p>
+          <h1 className="text-2xl font-bold mb-1">{t("sellerDashboardTitle")}</h1>
+          <p className="text-default-500">{t("sellerDashboardDesc")}</p>
         </div>
 
         <Button
@@ -161,7 +163,7 @@ export const SellerDashboardPage: React.FC = () => {
           onPress={() => setIsAddModalOpen(true)}
           startContent={<Icon icon="lucide:plus" />}
         >
-          Add New Product
+          {t("addNewProduct")}
         </Button>
       </div>
 
@@ -170,7 +172,7 @@ export const SellerDashboardPage: React.FC = () => {
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-default-500">Total Products</p>
+                <p className="text-default-500">{t("totalProducts")}</p>
                 <p className="text-3xl font-bold">{products.length}</p>
               </div>
               <div className="p-3 rounded-full bg-primary-100">
@@ -184,7 +186,7 @@ export const SellerDashboardPage: React.FC = () => {
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-default-500">Total Sales</p>
+                <p className="text-default-500">{t("totalSales")}</p>
                 <p className="text-3xl font-bold">S/ 12,450</p>
               </div>
               <div className="p-3 rounded-full bg-success-100">
@@ -198,7 +200,7 @@ export const SellerDashboardPage: React.FC = () => {
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-default-500">Orders</p>
+                <p className="text-default-500">{t("orders")}</p>
                 <p className="text-3xl font-bold">48</p>
               </div>
               <div className="p-3 rounded-full bg-warning-100">
@@ -211,7 +213,7 @@ export const SellerDashboardPage: React.FC = () => {
 
       <Card>
         <CardHeader className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold">Your Products</h2>
+          <h2 className="text-lg font-semibold">{t("yourProducts")}</h2>
         </CardHeader>
         <CardBody>
           <Table
@@ -232,18 +234,18 @@ export const SellerDashboardPage: React.FC = () => {
             }
           >
             <TableHeader>
-              <TableColumn>PRODUCT</TableColumn>
-              <TableColumn>CATEGORY</TableColumn>
-              <TableColumn>PRICE</TableColumn>
-              <TableColumn>STOCK</TableColumn>
-              <TableColumn>RATING</TableColumn>
-              <TableColumn>STATUS</TableColumn>
-              <TableColumn>ACTIONS</TableColumn>
+              <TableColumn>{t("product")}</TableColumn>
+              <TableColumn>{t("category")}</TableColumn>
+              <TableColumn>{t("price")}</TableColumn>
+              <TableColumn>{t("stock")}</TableColumn>
+              <TableColumn>{t("rating")}</TableColumn>
+              <TableColumn>{t("status")}</TableColumn>
+              <TableColumn>{t("actions")}</TableColumn>
             </TableHeader>
             <TableBody
               isLoading={isLoading}
               loadingContent={<Spinner />}
-              emptyContent="No products found"
+              emptyContent={t("noProductsTitle")}
             >
               {getCurrentPageItems().map((product) => (
                 <TableRow key={product.id}>
@@ -283,12 +285,12 @@ export const SellerDashboardPage: React.FC = () => {
                       variant="flat"
                       size="sm"
                     >
-                      {product.stock > 0 ? "Published" : "Out of Stock"}
+                      {product.stock > 0 ? t("published") : t("outOfStock")}
                     </Chip>
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Tooltip content="Edit product">
+                      <Tooltip content={t("editProduct")}>
                         <Button
                           isIconOnly
                           size="sm"
@@ -298,7 +300,7 @@ export const SellerDashboardPage: React.FC = () => {
                           <Icon icon="lucide:edit" className="text-default-500" />
                         </Button>
                       </Tooltip>
-                      <Tooltip content="Delete product" color="danger">
+                      <Tooltip content={t("deleteProduct")} color="danger">
                         <Button
                           isIconOnly
                           size="sm"
@@ -323,7 +325,7 @@ export const SellerDashboardPage: React.FC = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Add New Product</ModalHeader>
+              <ModalHeader>{t("addNewProduct")}</ModalHeader>
               <ModalBody>
                 <ProductForm
                   onSubmit={handleAddProduct}
@@ -340,7 +342,7 @@ export const SellerDashboardPage: React.FC = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Edit Product</ModalHeader>
+              <ModalHeader>{t("editProduct")}</ModalHeader>
               <ModalBody>
                 {currentProduct && (
                   <ProductForm
@@ -360,17 +362,17 @@ export const SellerDashboardPage: React.FC = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Confirm Deletion</ModalHeader>
+              <ModalHeader>{t("confirmDeletion")}</ModalHeader>
               <ModalBody>
-                <p>Are you sure you want to delete <strong>{currentProduct?.name}</strong>?</p>
-                <p className="text-default-500 text-sm mt-2">This action cannot be undone.</p>
+                <p>{t("confirmDeleteMessage")}<strong>{currentProduct?.name}</strong>?</p>
+                <p className="text-default-500 text-sm mt-2">{t("actionIrreversible")}</p>
               </ModalBody>
               <ModalFooter>
                 <Button variant="flat" onPress={onClose}>
-                  Cancel
+                  {t("cancel")}
                 </Button>
                 <Button color="danger" onPress={handleDeleteProduct}>
-                  Delete
+                  {t("delete")}
                 </Button>
               </ModalFooter>
             </>

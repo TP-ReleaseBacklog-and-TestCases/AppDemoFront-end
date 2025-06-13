@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { Product } from "../components/product-card";
 import { CATEGORY_IMAGES } from "../constants/categoryImages";
+import { useLanguage } from "../context/language-context";
 
 // Mock product data
 const mockProduct: Product = {
@@ -25,6 +26,7 @@ interface ProductDetailPageParams {
 export const ProductDetailPage: React.FC = () => {
   const { id } = useParams<ProductDetailPageParams>();
   const history = useHistory();
+  const { t } = useLanguage();
   const [product, setProduct] = React.useState<Product | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [quantity, setQuantity] = React.useState(1);
@@ -77,14 +79,14 @@ export const ProductDetailPage: React.FC = () => {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <Icon icon="lucide:alert-circle" className="text-danger text-5xl mx-auto mb-4" />
-        <h2 className="text-2xl font-bold mb-2">Product Not Found</h2>
-        <p className="text-default-500 mb-6">The product you're looking for doesn't exist or has been removed.</p>
+        <h2 className="text-2xl font-bold mb-2">{t("productNotFound")}</h2>
+        <p className="text-default-500 mb-6">{t("productNotFoundDesc")}</p>
         <Button
           color="primary"
           onPress={() => history.push("/explore")}
           startContent={<Icon icon="lucide:arrow-left" />}
         >
-          Back to Products
+          {t("backToProducts")}
         </Button>
       </div>
     );
@@ -177,7 +179,7 @@ export const ProductDetailPage: React.FC = () => {
             <Divider className="my-6" />
 
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Quantity</h3>
+              <h3 className="text-lg font-semibold mb-2">{t("quantity")}</h3>
               <div className="flex items-center">
                 <Button
                   isIconOnly
@@ -199,7 +201,7 @@ export const ProductDetailPage: React.FC = () => {
                   <Icon icon="lucide:plus" />
                 </Button>
                 <span className="ml-4 text-default-500">
-                  {product.stock} available
+                  {product.stock} {t("available")}
                 </span>
               </div>
             </div>
@@ -213,7 +215,7 @@ export const ProductDetailPage: React.FC = () => {
                 onPress={handleAddToCart}
                 isLoading={isAddingToCart}
               >
-                Add to Cart
+                {t("addToCart")}
               </Button>
               <Button
                 variant="flat"
@@ -222,22 +224,22 @@ export const ProductDetailPage: React.FC = () => {
                 className="flex-1"
                 onPress={handleBuyNow}
               >
-                Buy Now
+                {t("buyNow")}
               </Button>
             </div>
 
             <div className="flex flex-col gap-3 text-default-500">
               <div className="flex items-center gap-2">
                 <Icon icon="lucide:truck" />
-                <span>Free shipping on orders over S/ 100</span>
+                <span>{t("freeShipping")}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Icon icon="lucide:refresh-ccw" />
-                <span>30-day return policy</span>
+                <span>{t("returnPolicy")}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Icon icon="lucide:shield" />
-                <span>2-year warranty included</span>
+                <span>{t("warranty")}</span>
               </div>
             </div>
           </div>
@@ -258,7 +260,7 @@ export const ProductDetailPage: React.FC = () => {
             tab: "max-w-fit px-0 h-12",
           }}
         >
-          <Tab key="description" title="Description">
+          <Tab key="description" title={t("description")}>
             <Card>
               <CardBody className="p-6">
                 <div className="prose max-w-none">
@@ -269,12 +271,12 @@ export const ProductDetailPage: React.FC = () => {
               </CardBody>
             </Card>
           </Tab>
-          <Tab key="specifications" title="Specifications">
+          <Tab key="specifications" title={t("specifications")}>
             <Card>
               <CardBody className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h3 className="text-lg font-semibold mb-3">Technical Details</h3>
+                    <h3 className="text-lg font-semibold mb-3">{t("technicalDetails")}</h3>
                     <table className="w-full">
                       <tbody>
                         <tr className="border-b border-divider">
@@ -301,7 +303,7 @@ export const ProductDetailPage: React.FC = () => {
                     </table>
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold mb-3">Physical Specifications</h3>
+                    <h3 className="text-lg font-semibold mb-3">{t("physicalSpecifications")}</h3>
                     <table className="w-full">
                       <tbody>
                         <tr className="border-b border-divider">
@@ -331,7 +333,7 @@ export const ProductDetailPage: React.FC = () => {
               </CardBody>
             </Card>
           </Tab>
-          <Tab key="reviews" title="Reviews">
+          <Tab key="reviews" title={t("reviews")}>
             <Card>
               <CardBody className="p-6">
                 <div className="flex flex-col md:flex-row gap-8">
@@ -394,8 +396,8 @@ export const ProductDetailPage: React.FC = () => {
 
                   <div className="md:w-2/3">
                     <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-lg font-semibold">Customer Reviews</h3>
-                      <Button color="primary" variant="flat">Write a Review</Button>
+                      <h3 className="text-lg font-semibold">{t("customerReviews")}</h3>
+                      <Button color="primary" variant="flat">{t("writeReview")}</Button>
                     </div>
 
                     {[1, 2, 3].map((i) => (
@@ -444,7 +446,7 @@ export const ProductDetailPage: React.FC = () => {
                       </div>
                     ))}
 
-                    <Button variant="flat" className="mt-2">Load More Reviews</Button>
+                    <Button variant="flat" className="mt-2">{t("loadMoreReviews")}</Button>
                   </div>
                 </div>
               </CardBody>
@@ -455,7 +457,7 @@ export const ProductDetailPage: React.FC = () => {
 
       {/* Related Products */}
       <div className="mt-12">
-        <h2 className="text-2xl font-bold mb-6">You May Also Like</h2>
+        <h2 className="text-2xl font-bold mb-6">{t("youMayAlsoLike")}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
             <Card key={i} isPressable className="overflow-hidden">

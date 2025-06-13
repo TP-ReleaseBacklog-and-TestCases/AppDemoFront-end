@@ -14,4 +14,12 @@ export default {
     reset: "Reset",
     clearAll: "Clear All",
     searchPlaceholder: "Search products...",
+    allCategories: "All Categories",
+    priceRange: "Price Range",
+    selectCategory: "Select category",
+    sortRelevance: "Relevance",
+    sortPriceAsc: "Price: Low to High",
+    sortPriceDesc: "Price: High to Low",
+    sortRatingDesc: "Rating: High to Low",
+    sortNewest: "Newest First",
 };

@@ -34,7 +34,7 @@ export const AccountSettingsPage: React.FC = () => {
     setTimeout(() => {
       // In a real app, this would update the user profile
       setIsLoading(false);
-      setSuccessMessage("Profile updated successfully");
+      setSuccessMessage(t("profileUpdated"));
 
       // Clear success message after 3 seconds
       setTimeout(() => {
@@ -54,7 +54,7 @@ export const AccountSettingsPage: React.FC = () => {
       });
       setAppLanguage(language);
       setIsLoading(false);
-      setSuccessMessage("Settings updated successfully");
+      setSuccessMessage(t("settingsUpdated"));
 
       // Clear success message after 3 seconds
       setTimeout(() => {
@@ -320,7 +320,7 @@ export const AccountSettingsPage: React.FC = () => {
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="font-medium">{t("enable2FA")}</p>
-                        <p className="text-default-500 text-sm">Add an extra layer of security to your account</p>
+                        <p className="text-default-500 text-sm">{t("extraSecurityHint")}</p>
                       </div>
                       <Switch />
                     </div>

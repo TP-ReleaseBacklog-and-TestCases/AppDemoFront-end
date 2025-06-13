@@ -27,4 +27,11 @@ export default {
     delete: "Eliminar",
     update: "Actualizar",
     create: "Crear",
+    productNameRequired: "El nombre del producto es obligatorio",
+    descriptionRequired: "La descripción es obligatoria",
+    priceRequired: "El precio es obligatorio",
+    pricePositive: "El precio debe ser un número positivo",
+    categoryRequired: "La categoría es obligatoria",
+    stockRequired: "El stock es obligatorio",
+    stockInteger: "El stock debe ser un número entero no negativo",
 };

@@ -27,4 +27,11 @@ export default {
     delete: "Delete",
     update: "Update",
     create: "Create",
+    productNameRequired: "Product name is required",
+    descriptionRequired: "Description is required",
+    priceRequired: "Price is required",
+    pricePositive: "Price must be a positive number",
+    categoryRequired: "Category is required",
+    stockRequired: "Stock is required",
+    stockInteger: "Stock must be a non-negative integer",
 };

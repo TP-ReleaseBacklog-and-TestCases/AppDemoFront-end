@@ -3,20 +3,13 @@ import { Card, CardBody, Input, Textarea, Select, SelectItem, Button, Divider } 
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { Product } from "./product-card";
+import { useLanguage } from "../context/language-context";
 
 interface ProductFormProps {
   product?: Product;
   onSubmit: (product: Omit<Product, "id" | "rating">) => void;
   onCancel: () => void;
 }
-
-const categories = [
-  { value: "Electronics", label: "Electronics" },
-  { value: "Books", label: "Books" },
-  { value: "Clothing", label: "Clothing" },
-  { value: "Home", label: "Home & Kitchen" },
-  { value: "Sports", label: "Sports & Outdoors" },
-];
 
 export const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }) => {
   const [name, setName] = React.useState(product?.name || "");
@@ -26,32 +19,43 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onC
   const [stock, setStock] = React.useState(product?.stock.toString() || "");
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const { t } = useLanguage();
+  const categories = React.useMemo(
+    () => [
+      { value: "Electronics", label: t("electronics") },
+      { value: "Books", label: t("books") },
+      { value: "Clothing", label: t("clothing") },
+      { value: "Home", label: t("homeKitchen") },
+      { value: "Sports", label: t("sportsOutdoors") },
+    ],
+    [t]
+  );
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
     if (!name.trim()) {
-      newErrors.name = "Product name is required";
+      newErrors.name = t("productNameRequired");
     }
 
     if (!description.trim()) {
-      newErrors.description = "Description is required";
+      newErrors.description = t("descriptionRequired");
     }
 
     if (!price.trim()) {
-      newErrors.price = "Price is required";
+      newErrors.price = t("priceRequired");
     } else if (isNaN(Number(price)) || Number(price) <= 0) {
-      newErrors.price = "Price must be a positive number";
+      newErrors.price = t("pricePositive");
     }
 
     if (!category) {
-      newErrors.category = "Category is required";
+      newErrors.category = t("categoryRequired");
     }
 
     if (!stock.trim()) {
-      newErrors.stock = "Stock is required";
+      newErrors.stock = t("stockRequired");
     } else if (isNaN(Number(stock)) || Number(stock) < 0 || !Number.isInteger(Number(stock))) {
-      newErrors.stock = "Stock must be a non-negative integer";
+      newErrors.stock = t("stockInteger");
     }
 
     setErrors(newErrors);
@@ -170,7 +174,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onC
                 onPress={onCancel}
                 className="min-w-[100px]"
               >
-                Cancel
+                {t("cancel")}
               </Button>
               <Button
                 color="primary"
@@ -179,7 +183,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onC
                 className="min-w-[100px]"
                 startContent={!isSubmitting && <Icon icon="lucide:save" />}
               >
-                {product ? "Update" : "Create"}
+                {product ? t("update") : t("create")}
               </Button>
             </div>
           </form>

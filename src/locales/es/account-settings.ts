@@ -32,4 +32,7 @@ export default {
     dangerZone: "Zona de peligro",
     deleteAccount: "Eliminar cuenta",
     deleteAccountDesc: "Eliminar permanentemente tu cuenta y todos los datos",
+    profileUpdated: "Perfil actualizado con éxito",
+    settingsUpdated: "Configuración actualizada con éxito",
+    extraSecurityHint: "Agrega una capa extra de seguridad a tu cuenta",
 };
