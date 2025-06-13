@@ -5,6 +5,8 @@ export default {
     electronics: "Electrónica",
     books: "Libros",
     clothing: "Ropa",
+    homeKitchen: "Hogar y Cocina",
+    sportsOutdoors: "Deportes y Aire Libre",
     account: "Cuenta",
     login: "Iniciar sesión",
     register: "Registrarse",

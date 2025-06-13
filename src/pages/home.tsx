@@ -50,16 +50,20 @@ const featuredProducts: Product[] = [
   }
 ];
 
-const categories = [
-  { name: "Electronics", icon: "lucide:cpu", color: "primary" },
-  { name: "Books", icon: "lucide:book", color: "success" },
-  { name: "Clothing", icon: "lucide:shirt", color: "secondary" },
-  { name: "Home & Kitchen", icon: "lucide:sofa", color: "warning" },
-  { name: "Sports & Outdoors", icon: "lucide:dumbbell", color: "danger" }
+const staticCategories = [
+  { key: "electronics", value: "Electronics", icon: "lucide:cpu", color: "primary" },
+  { key: "books", value: "Books", icon: "lucide:book", color: "success" },
+  { key: "clothing", value: "Clothing", icon: "lucide:shirt", color: "secondary" },
+  { key: "homeKitchen", value: "Home", icon: "lucide:sofa", color: "warning" },
+  { key: "sportsOutdoors", value: "Sports", icon: "lucide:dumbbell", color: "danger" }
 ];
 
 export const HomePage: React.FC = () => {
   const { t } = useLanguage();
+  const categories = staticCategories.map(cat => ({
+    ...cat,
+    name: t(cat.key)
+  }));
   return (
     <div>
       {/* Hero Section */}
@@ -123,7 +127,7 @@ export const HomePage: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {categories.map((category, index) => (
               <motion.div
-                key={category.name}
+                key={category.value}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
@@ -131,7 +135,7 @@ export const HomePage: React.FC = () => {
                 <Card
                   isPressable
                   as={RouterLink}
-                  to={`/explore?category=${category.name}`}
+                  to={`/explore?category=${category.value}`}
                   className="h-full"
                 >
                   <CardBody className="flex flex-col items-center justify-center p-6 text-center">
