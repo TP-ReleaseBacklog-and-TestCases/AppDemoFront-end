@@ -1,0 +1,16 @@
+export default {
+    discoverProducts: "Discover Amazing Products",
+    findBestPrices: "Find everything you need at the best prices with our curated selection of top-quality products.",
+    exploreNow: "Explore Now",
+    joinUs: "Join Us",
+    shopByCategory: "Shop by Category",
+    browseByCategory: "Browse our wide selection of products by category",
+    featuredProducts: "Featured Products",
+    viewAll: "View All",
+    whatCustomersSay: "What Our Customers Say",
+    dontJustTakeWord: "Don't just take our word for it",
+    readyToShop: "Ready to Start Shopping?",
+    joinThousands: "Join thousands of satisfied customers today.",
+    exploreProducts: "Explore Products",
+    createAccount: "Create Account",
+};

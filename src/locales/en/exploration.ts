@@ -1,0 +1,17 @@
+export default {
+    exploreProductsTitle: "Explore Products",
+    exploreProductsDescription: "Browse our collection of products and find exactly what you need",
+    noProductsTitle: "No products found",
+    noProductsDescription: "We couldn't find any products matching your search criteria.",
+    showingResults: "Showing",
+    of: "of",
+    products: "products",
+    moreFilters: "More Filters",
+    filters: "Filters",
+    category: "Category",
+    sortBy: "Sort by",
+    applyFilters: "Apply Filters",
+    reset: "Reset",
+    clearAll: "Clear All",
+    searchPlaceholder: "Search products...",
+};
