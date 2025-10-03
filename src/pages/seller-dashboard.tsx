@@ -64,7 +64,7 @@ const mockProducts: Product[] = [
 export const SellerDashboardPage: React.FC = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
-  const [products, setProducts] = React.useState<Product[]>(mockProducts);
+  const [products, setProducts] = React.useState<Product[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = React.useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
@@ -81,29 +81,105 @@ export const SellerDashboardPage: React.FC = () => {
     return products.slice(startIndex, endIndex);
   };
 
-  const handleAddProduct = (product: Omit<Product, "id" | "rating">) => {
-    const newProduct: Product = {
-      ...product,
-      id: `prod${products.length + 1}`,
-      rating: 0,
-    };
+  const handleAddProduct = async (productData: {
+    userId: number;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+    category: string;
+    imageUrl: string;
+  }) => {
+    try {
+      console.log("=== POST DATA ===");
+      console.log("URL:", "https://backendecommerce-production-fd6f.up.railway.app/products");
+      console.log("Method:", "POST");
+      console.log("Headers:", { "Content-Type": "application/json" });
+      console.log("Body (JSON):", JSON.stringify(productData, null, 2));
+      console.log("Body (Object):", productData);
+      console.log("================");
 
-    setProducts([...products, newProduct]);
-    setIsAddModalOpen(false);
+      const response = await fetch("https://backendecommerce-production-fd6f.up.railway.app/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(productData),
+      });
+
+      console.log("Response Status:", response.status);
+      console.log("Response Headers:", Object.fromEntries(response.headers.entries()));
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log("Error Response Body:", errorText);
+        throw new Error(`Failed to create product: ${response.status} - ${errorText}`);
+      }
+
+      const newProduct = await response.json();
+      console.log("Success Response:", newProduct);
+      
+      // Agregar el nuevo producto a la lista
+      const mappedProduct: Product = {
+        id: String(newProduct.id),
+        name: newProduct.name,
+        description: newProduct.description,
+        price: newProduct.price,
+        rating: newProduct.rating ?? 0,
+        category: newProduct.category,
+        image: newProduct.imageUrl,
+        stock: newProduct.stock,
+      };
+
+      setProducts(prev => [...prev, mappedProduct]);
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.error("Error creating product:", error);
+    }
   };
 
-  const handleEditProduct = (product: Omit<Product, "id" | "rating">) => {
+  const handleEditProduct = async (productData: {
+    userId: number;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+    category: string;
+    imageUrl: string;
+  }) => {
     if (!currentProduct) return;
 
-    const updatedProducts = products.map((p) =>
-      p.id === currentProduct.id
-        ? { ...p, ...product }
-        : p
-    );
+    try {
+      const response = await fetch(`https://backendecommerce-production-fd6f.up.railway.app/products/${currentProduct.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(productData),
+      });
 
-    setProducts(updatedProducts);
-    setIsEditModalOpen(false);
-    setCurrentProduct(null);
+      if (!response.ok) {
+        throw new Error("Failed to update product");
+      }
+
+      const updatedProduct = await response.json();
+      
+      const updatedProducts = products.map((p) =>
+        p.id === currentProduct.id
+          ? {
+              ...p,
+              name: updatedProduct.name,
+              description: updatedProduct.description,
+              price: updatedProduct.price,
+              category: updatedProduct.category,
+              image: updatedProduct.imageUrl,
+              stock: updatedProduct.stock,
+            }
+          : p
+      );
+
+      setProducts(updatedProducts);
+      setIsEditModalOpen(false);
+      setCurrentProduct(null);
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
   };
 
   const handleDeleteProduct = () => {
@@ -125,15 +201,31 @@ export const SellerDashboardPage: React.FC = () => {
     setIsDeleteModalOpen(true);
   };
 
-  // Simulate loading
+  // Fetch products for this seller
   React.useEffect(() => {
+    if (!user) return;
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 800);
-  }, []);
+    fetch(`https://backendecommerce-production-fd6f.up.railway.app/products/seller/${user.id}`)
+      .then(res => res.json())
+      .then(data => {
+        // Map backend data to Product[]
+        const mapped = data.map((item: any) => ({
+          id: String(item.id),
+          name: item.name,
+          description: item.description ?? "",
+          price: item.price,
+          rating: item.rating ?? 0,
+          category: item.category ?? "",
+          image: item.imageUrl,
+          stock: item.stock ?? 0,
+        }));
+        setProducts(mapped);
+      })
+      .catch(() => setProducts([]))
+      .finally(() => setIsLoading(false));
+  }, [user]);
 
-  if (!user || user.role !== "seller") {
+  if (!user || user.userType !== "SELLER") {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <Icon icon="lucide:alert-circle" className="text-danger text-5xl mx-auto mb-4" />

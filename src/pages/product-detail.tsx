@@ -33,16 +33,27 @@ export const ProductDetailPage: React.FC = () => {
   const [selectedTab, setSelectedTab] = React.useState("description");
   const [isAddingToCart, setIsAddingToCart] = React.useState(false);
 
-  // Fetch product data
+  // Fetch product data from backend
   React.useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setProduct({
-        ...mockProduct,
-        id
-      });
-      setIsLoading(false);
-    }, 800);
+    setIsLoading(true);
+    fetch(`https://backendecommerce-production-fd6f.up.railway.app/products/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        // Mapea los datos al formato Product
+        const mappedProduct: Product = {
+          id: String(data.id),
+          name: data.name,
+          description: data.description ?? "",
+          price: data.price,
+          rating: data.rating ?? 0,
+          category: data.category ?? "",
+          image: data.imageUrl,
+          stock: data.stock ?? 0,
+        };
+        setProduct(mappedProduct);
+      })
+      .catch(() => setProduct(null))
+      .finally(() => setIsLoading(false));
   }, [id]);
 
   const handleQuantityChange = (value: number) => {

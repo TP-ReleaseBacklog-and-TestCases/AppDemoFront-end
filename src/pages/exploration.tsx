@@ -9,43 +9,16 @@ import { PaginationControl } from "../components/pagination-control";
 import { CATEGORY_IMAGES } from "../constants/categoryImages";
 import { useLanguage } from "../context/language-context";
 
-// Mock data generator
-const generateMockProducts = (count: number): Product[] => {
-  const categories = ["Electronics", "Books", "Clothing", "Home", "Sports"];
-  const products: Product[] = [];
-
-  for (let i = 1; i <= count; i++) {
-    const categoryIndex = Math.floor(Math.random() * categories.length);
-    const price = Math.floor(Math.random() * 1900) + 100;
-    const rating = (Math.random() * 2 + 3).toFixed(1);
-    const stock = Math.floor(Math.random() * 100) + 1;
-
-    products.push({
-      id: `prod${i}`,
-      name: `Product ${i}`,
-      description: `This is a detailed description for product ${i}. It contains all the important information about features and specifications.`,
-      price,
-      rating: parseFloat(rating),
-      category: categories[categoryIndex],
-      image: CATEGORY_IMAGES[categories[categoryIndex].toLowerCase()],
-      stock
-    });
-  }
-
-  return products;
-};
-
-const allProducts = generateMockProducts(40);
-
 export const ExplorationPage: React.FC = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const initialCategory = queryParams.get("category") || "all";
   const { t } = useLanguage();
 
+  const [allProducts, setAllProducts] = React.useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = React.useState<Product[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [filteredProducts, setFilteredProducts] = React.useState<Product[]>(allProducts);
-  const [isLoading, setIsLoading] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [category, setCategory] = React.useState(initialCategory);
   const [priceRange, setPriceRange] = React.useState<[number, number]>([0, 2000]);
@@ -54,6 +27,39 @@ export const ExplorationPage: React.FC = () => {
   const productsPerPage = 12;
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
+  // Fetch products from backend
+  React.useEffect(() => {
+    setIsLoading(true);
+    fetch("https://backendecommerce-production-fd6f.up.railway.app/products/status/ACTIVE")
+      .then(res => res.json())
+      .then(data => {
+        // Map backend data to Product interface
+        const mapped = data.map((item: any) => ({
+          id: String(item.id),
+          name: item.name,
+          description: item.description ?? "",
+          price: item.price,
+          rating: item.rating ?? 0,
+          category: item.category ?? "",
+          image: item.imageUrl,
+          stock: item.stock ?? 0,
+        }));
+        setAllProducts(mapped);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setAllProducts([]);
+        setIsLoading(false);
+      });
+  }, []);
+
+  // Apply filters when products, search, category, price, or sort change
+  React.useEffect(() => {
+    applyFilters(searchTerm, category, priceRange, sortOption);
+    setCurrentPage(1);
+    // eslint-disable-next-line
+  }, [allProducts, searchTerm, category, priceRange, sortOption]);
+
   const getCurrentPageProducts = () => {
     const startIndex = (currentPage - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
@@ -61,40 +67,17 @@ export const ExplorationPage: React.FC = () => {
   };
 
   const handleSearch = (keyword: string) => {
-    setIsLoading(true);
     setSearchTerm(keyword);
-    setCurrentPage(1);
-
-    // Simulate API call delay
-    setTimeout(() => {
-      applyFilters(keyword, category, priceRange, sortOption);
-      setIsLoading(false);
-    }, 500);
   };
 
   const handleFilterChange = (filters: { category: string; priceRange: [number, number]; sortBy: string }) => {
-    setIsLoading(true);
     setCategory(filters.category);
     setPriceRange(filters.priceRange);
     setSortOption(filters.sortBy);
-    setCurrentPage(1);
-
-    // Simulate API call delay
-    setTimeout(() => {
-      applyFilters(searchTerm, filters.category, filters.priceRange, filters.sortBy);
-      setIsLoading(false);
-    }, 500);
   };
 
   const handleSortChange = (sortBy: string) => {
-    setIsLoading(true);
     setSortOption(sortBy);
-
-    // Simulate API call delay
-    setTimeout(() => {
-      applyFilters(searchTerm, category, priceRange, sortBy);
-      setIsLoading(false);
-    }, 300);
   };
 
   const handlePageChange = (page: number) => {
@@ -102,10 +85,15 @@ export const ExplorationPage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const applyFilters = (search: string, cat: string, price: [number, number], sort: string) => {
+  function applyFilters(
+    search: string,
+    cat: string,
+    price: [number, number],
+    sort: string
+  ) {
     let results = [...allProducts];
 
-    // Apply search filter
+    // Search filter
     if (search) {
       const searchLower = search.toLowerCase();
       results = results.filter(
@@ -115,17 +103,17 @@ export const ExplorationPage: React.FC = () => {
       );
     }
 
-    // Apply category filter
+    // Category filter
     if (cat !== "all") {
       results = results.filter((product) => product.category === cat);
     }
 
-    // Apply price filter
+    // Price filter
     results = results.filter(
       (product) => product.price >= price[0] && product.price <= price[1]
     );
 
-    // Apply sorting
+    // Sorting
     switch (sort) {
       case "price_asc":
         results.sort((a, b) => a.price - b.price);
@@ -136,28 +124,12 @@ export const ExplorationPage: React.FC = () => {
       case "rating_desc":
         results.sort((a, b) => b.rating - a.rating);
         break;
-      case "newest":
-        // In a real app, you would sort by date
-        results.sort((a, b) => parseInt(b.id.replace("prod", "")) - parseInt(a.id.replace("prod", "")));
-        break;
       default:
-        // relevance - no specific sorting
         break;
     }
 
     setFilteredProducts(results);
-  };
-
-  // Initialize with any URL parameters
-  React.useEffect(() => {
-    if (initialCategory !== "all") {
-      handleFilterChange({
-        category: initialCategory,
-        priceRange,
-        sortBy: sortOption,
-      });
-    }
-  }, []);
+  }
 
   const currentProducts = getCurrentPageProducts();
 

@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { useAuth } from "../context/auth-context";
 import { useLanguage } from "../context/language-context";
 
+const BACKEND_URL = "https://backendecommerce-production-fd6f.up.railway.app/users/register";
+
 export const RegisterPage: React.FC = () => {
   const { register } = useAuth();
   const history = useHistory();
@@ -17,6 +19,12 @@ export const RegisterPage: React.FC = () => {
   const [role, setRole] = React.useState("buyer");
   const [isLoading, setIsLoading] = React.useState(false);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
+  const [lastname, setLastname] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [dni, setDni] = React.useState("");
+  const [birthDate, setBirthDate] = React.useState(""); // formato: YYYY-MM-DD
+  const [photo, setPhoto] = React.useState(""); // puedes dejarlo vacío o pedir URL
+  const [userType, setUserType] = React.useState("CUSTOMER");
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -41,6 +49,22 @@ export const RegisterPage: React.FC = () => {
       newErrors.confirmPassword = t("passwordsMismatch");
     }
 
+    if (!lastname.trim()) {
+      newErrors.lastname = "Apellido es requerido";
+    }
+
+    if (!phone.trim()) {
+      newErrors.phone = "Teléfono es requerido";
+    }
+
+    if (!dni.trim()) {
+      newErrors.dni = "DNI es requerido";
+    }
+
+    if (!birthDate.trim()) {
+      newErrors.birthDate = "Fecha de nacimiento es requerida";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -54,9 +78,31 @@ export const RegisterPage: React.FC = () => {
 
     setIsLoading(true);
 
+    // Mapea el valor de role a userType
+    const mappedUserType = role === "seller" ? "SELLER" : "CUSTOMER";
+
     try {
-      await register(name, email, password, role as "buyer" | "seller");
-      history.push("/");
+      const response = await fetch(BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          names: name,
+          lastname,
+          phone,
+          dni,
+          birthDate,
+          photo,
+          userType: mappedUserType,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Registration failed");
+      }
+
+      history.push("/login");
     } catch (err) {
       setErrors({
         form: t("registrationFailed")
@@ -133,6 +179,45 @@ export const RegisterPage: React.FC = () => {
                 isInvalid={!!errors.confirmPassword}
                 errorMessage={errors.confirmPassword}
                 isRequired
+              />
+
+              <Input
+                label="Apellido"
+                placeholder="Ingresa tu apellido"
+                value={lastname}
+                onValueChange={setLastname}
+                isRequired
+              />
+
+              <Input
+                label="Teléfono"
+                placeholder="Ingresa tu teléfono"
+                value={phone}
+                onValueChange={setPhone}
+                isRequired
+              />
+
+              <Input
+                label="DNI"
+                placeholder="Ingresa tu DNI"
+                value={dni}
+                onValueChange={setDni}
+                isRequired
+              />
+
+              <Input
+                label="Fecha de nacimiento"
+                type="date"
+                value={birthDate}
+                onValueChange={setBirthDate}
+                isRequired
+              />
+
+              <Input
+                label="Foto (URL)"
+                placeholder="URL de tu foto (opcional)"
+                value={photo}
+                onValueChange={setPhoto}
               />
 
               <div>

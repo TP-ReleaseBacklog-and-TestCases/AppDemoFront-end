@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { Button, Card, CardBody, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
@@ -7,55 +7,12 @@ import { ProductCard, Product } from "../components/product-card";
 import { CATEGORY_IMAGES } from "../constants/categoryImages";
 import { useLanguage } from "../context/language-context";
 
-const featuredProducts: Product[] = [
-  {
-    id: "prod1",
-    name: "Premium Laptop Pro",
-    description: "High-performance laptop with the latest processor and stunning display.",
-    price: 1899,
-    rating: 4.8,
-    category: "Electronics",
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80",
-    stock: 15
-  },
-  {
-    id: "prod2",
-    name: "Wireless Noise-Cancelling Headphones",
-    description: "Experience crystal-clear sound with these premium wireless headphones.",
-    price: 299,
-    rating: 4.7,
-    category: "Electronics",
-    image: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80",
-    stock: 32
-  },
-  {
-    id: "prod3",
-    name: "Modern Design Chair",
-    description: "Ergonomic chair with stylish design perfect for your home office.",
-    price: 159,
-    rating: 4.5,
-    category: "Furniture",
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80",
-    stock: 8
-  },
-  {
-    id: "prod4",
-    name: "Professional DSLR Camera",
-    description: "Capture stunning photos with this high-resolution professional camera.",
-    price: 899,
-    rating: 4.9,
-    category: "Electronics",
-    image: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80",
-    stock: 5
-  }
-];
-
 const staticCategories = [
-  { key: "electronics", value: "Electronics", icon: "lucide:cpu", color: "primary" },
-  { key: "books", value: "Books", icon: "lucide:book", color: "success" },
-  { key: "clothing", value: "Clothing", icon: "lucide:shirt", color: "secondary" },
-  { key: "homeKitchen", value: "Home", icon: "lucide:sofa", color: "warning" },
-  { key: "sportsOutdoors", value: "Sports", icon: "lucide:dumbbell", color: "danger" }
+  { key: "ELECTRONIC", value: "ELECTRONIC", icon: "lucide:cpu", color: "primary" },
+  { key: "FASHION", value: "FASHION", icon: "lucide:sparkles", color: "secondary" },
+  { key: "CLOTHING", value: "CLOTHING", icon: "lucide:shirt", color: "success" },
+  { key: "HOME", value: "HOME", icon: "lucide:sofa", color: "warning" },
+  { key: "SPORTS", value: "SPORTS", icon: "lucide:dumbbell", color: "danger" }
 ];
 
 export const HomePage: React.FC = () => {
@@ -64,6 +21,37 @@ export const HomePage: React.FC = () => {
     ...cat,
     name: t(cat.key)
   }));
+
+  const [activeProducts, setActiveProducts] = useState<Product[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      setLoadingProducts(true);
+      try {
+        const res = await fetch("https://backendecommerce-production-fd6f.up.railway.app/products/status/ACTIVE");
+        const data = await res.json();
+        // Mapea los productos del backend al formato ProductCard
+        const mapped = data.map((item: any) => ({
+          id: String(item.id),
+          name: item.name,
+          description: item.description ?? "",
+          price: item.price,
+          rating: item.rating ?? 0,
+          category: item.category ?? "",
+          image: item.imageUrl,
+          stock: item.stock ?? 0,
+        }));
+        setActiveProducts(mapped);
+      } catch (e) {
+        setActiveProducts([]);
+      } finally {
+        setLoadingProducts(false);
+      }
+    }
+    fetchProducts();
+  }, []);
+
   return (
     <div>
       {/* Hero Section */}
@@ -156,29 +144,24 @@ export const HomePage: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-bold">{t("featuredProducts")}</h2>
-            <Button
-              as={RouterLink}
-              to="/explore"
-              variant="light"
-              color="primary"
-              endContent={<Icon icon="lucide:arrow-right" />}
-            >
-              {t("viewAll")}
-            </Button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-              >
-                <ProductCard product={product} />
-              </motion.div>
-            ))}
-          </div>
+          {loadingProducts ? (
+            <div>{t("loading")}</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {activeProducts.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
+                  <ProductCard product={product} />
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

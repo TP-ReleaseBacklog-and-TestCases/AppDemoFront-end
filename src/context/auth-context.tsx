@@ -1,16 +1,21 @@
 import React from "react";
 import { Language } from "./language-context";
 
-type User = {
-  id: string;
-  name: string;
+export interface User {
+  id: number;
   email: string;
-  role: "buyer" | "seller";
+  names: string;
+  lastname: string;
+  phone: string;
+  dni: string;
+  birthDate: string;
+  photo: string;
+  userType: string;
   settings: {
-    language: Language;
+    language: "en" | "es";
     notifications: boolean;
   };
-};
+}
 
 type AuthContextType = {
   user: User | null;
@@ -29,42 +34,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Mock login function
   const login = async (email: string, password: string) => {
-    // In a real app, this would make an API call
-    if (email === "demo@example.com" && password === "password") {
-      setUser({
-        id: "user1",
-        name: "Demo User",
-        email: "demo@example.com",
-        role: "buyer",
-        settings: {
-          language: "en",
-          notifications: true,
-        },
-      });
-    } else if (email === "seller@example.com" && password === "password") {
-      setUser({
-        id: "seller1",
-        name: "Demo Seller",
-        email: "seller@example.com",
-        role: "seller",
-        settings: {
-          language: "en",
-          notifications: true,
-        },
-      });
-    } else {
+    const response = await fetch("https://backendecommerce-production-fd6f.up.railway.app/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
       throw new Error("Invalid credentials");
     }
+
+    const data = await response.json();
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data));
+
+    setUser({
+      id: data.id,
+      names: data.names,
+      lastname: data.lastname,
+      email: data.email,
+      phone: data.phone,
+      dni: data.dni,
+      birthDate: data.birthDate,
+      photo: data.photo,
+      userType: data.userType,
+      settings: {
+        language: "en",
+        notifications: true,
+      },
+    });
   };
 
   // Mock register function
   const register = async (name: string, email: string, password: string, role: "buyer" | "seller") => {
     // In a real app, this would make an API call
     setUser({
-      id: "new-user",
-      name,
+      id: 3,
+      names: name,
+      lastname: "",
       email,
-      role,
+      phone: "",
+      dni: "",
+      birthDate: "",
+      photo: "path/to/photo.jpg",
+      userType: role,
       settings: {
         language: "en",
         notifications: true,
@@ -87,6 +100,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
     }
   };
+
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const data = JSON.parse(storedUser);
+      setUser({
+        id: data.id,
+        names: data.names,
+        lastname: data.lastname,
+        email: data.email,
+        phone: data.phone,
+        dni: data.dni,
+        birthDate: data.birthDate,
+        photo: data.photo,
+        userType: data.userType,
+        settings: {
+          language: "en",
+          notifications: true,
+        },
+      });
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout, updateUserSettings }}>

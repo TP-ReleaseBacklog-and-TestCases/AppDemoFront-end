@@ -6,6 +6,25 @@ import { motion } from "framer-motion";
 import { useAuth } from "../context/auth-context";
 import { useLanguage } from "../context/language-context";
 
+const BACKEND_URL = "https://backendecommerce-production-fd6f.up.railway.app/users/login";
+
+export async function loginRequest(email: string, password: string) {
+  const response = await fetch(BACKEND_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Invalid credentials");
+  }
+
+  const data = await response.json();
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("user", JSON.stringify(data));
+  return data;
+}
+
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const history = useHistory();
@@ -28,7 +47,7 @@ export const LoginPage: React.FC = () => {
     setError("");
 
     try {
-      await login(email, password);
+      await loginRequest(email, password); // Usa la función correcta aquí
       history.push("/");
     } catch (err) {
       setError(t("invalidCredentials"));

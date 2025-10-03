@@ -4,85 +4,101 @@ import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { Product } from "./product-card";
 import { useLanguage } from "../context/language-context";
+import { useAuth } from "../context/auth-context";
 
 interface ProductFormProps {
   product?: Product;
-  onSubmit: (product: Omit<Product, "id" | "rating">) => void;
+  onSubmit: (productData: {
+    userId: number;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+    category: string;
+    imageUrl: string;
+  }) => void;
   onCancel: () => void;
 }
 
 export const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }) => {
+  const { user } = useAuth();
   const [name, setName] = React.useState(product?.name || "");
   const [description, setDescription] = React.useState(product?.description || "");
   const [price, setPrice] = React.useState(product?.price.toString() || "");
-  const [category, setCategory] = React.useState(product?.category || "");
-  const [stock, setStock] = React.useState(product?.stock.toString() || "");
-  const [errors, setErrors] = React.useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [stock, setStock] = React.useState(product?.stock?.toString() || "");
+  const [category, setCategory] = React.useState(product?.category || "ELECTRONIC");
+  const [imageFile, setImageFile] = React.useState<File | null>(null);
+  const [imagePreview, setImagePreview] = React.useState(product?.image || "");
+  const [isUploadingImage, setIsUploadingImage] = React.useState(false);
   const { t } = useLanguage();
-  const categories = React.useMemo(
-    () => [
-      { value: "Electronics", label: t("electronics") },
-      { value: "Books", label: t("books") },
-      { value: "Clothing", label: t("clothing") },
-      { value: "Home", label: t("homeKitchen") },
-      { value: "Sports", label: t("sportsOutdoors") },
-    ],
-    [t]
-  );
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+  const categories = [
+    { value: "ELECTRONIC", label: t("ELECTRONIC") },
+    { value: "FASHION", label: t("FASHION") },
+    { value: "CLOTHING", label: t("CLOTHING") },
+    { value: "HOME", label: t("HOME") },
+    { value: "SPORTS", label: t("SPORTS") },
+  ];
 
-    if (!name.trim()) {
-      newErrors.name = t("productNameRequired");
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
     }
-
-    if (!description.trim()) {
-      newErrors.description = t("descriptionRequired");
-    }
-
-    if (!price.trim()) {
-      newErrors.price = t("priceRequired");
-    } else if (isNaN(Number(price)) || Number(price) <= 0) {
-      newErrors.price = t("pricePositive");
-    }
-
-    if (!category) {
-      newErrors.category = t("categoryRequired");
-    }
-
-    if (!stock.trim()) {
-      newErrors.stock = t("stockRequired");
-    } else if (isNaN(Number(stock)) || Number(stock) < 0 || !Number.isInteger(Number(stock))) {
-      newErrors.stock = t("stockInteger");
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const uploadImage = async (): Promise<string> => {
+    if (!imageFile) throw new Error("No image selected");
 
-    if (!validateForm()) {
-      return;
+    setIsUploadingImage(true);
+    const formData = new FormData();
+    formData.append("file", imageFile);
+
+    const response = await fetch("https://backendecommerce-production-fd6f.up.railway.app/files/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to upload image");
     }
 
-    setIsSubmitting(true);
+    const imageUrl = await response.text(); // Devuelve string, no JSON
+    setIsUploadingImage(false);
+    return imageUrl;
+  };
 
-    // Simulate API call
-    setTimeout(() => {
-      onSubmit({
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      let imageUrl = product?.image || "";
+
+      // Si hay nueva imagen, subirla primero
+      if (imageFile) {
+        imageUrl = await uploadImage();
+      }
+
+      const productData = {
+        userId: user?.id || 0,
         name,
         description,
-        price: Number(price),
+        price: parseFloat(price),
+        stock: parseInt(stock),
         category,
-        stock: Number(stock),
-        image: product?.image || "",
-      });
-      setIsSubmitting(false);
-    }, 1000);
+        imageUrl,
+      };
+
+      onSubmit(productData);
+    } catch (error) {
+      console.error("Error:", error);
+      // Mostrar error al usuario
+    }
   };
 
   return (
@@ -106,22 +122,18 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onC
                 placeholder="Enter product name"
                 value={name}
                 onValueChange={setName}
-                isInvalid={!!errors.name}
-                errorMessage={errors.name}
                 isRequired
               />
 
               <Select
                 label="Category"
                 placeholder="Select a category"
-                selectedKeys={category ? [category] : []}
-                onChange={(e) => setCategory(e.target.value)}
-                isInvalid={!!errors.category}
-                errorMessage={errors.category}
+                selectedKeys={[category]}
+                onSelectionChange={(keys) => setCategory(Array.from(keys)[0] as string)}
                 isRequired
               >
                 {categories.map((cat) => (
-                  <SelectItem key={cat.value}>
+                  <SelectItem key={cat.value} value={cat.value}>
                     {cat.label}
                   </SelectItem>
                 ))}
@@ -133,8 +145,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onC
               placeholder="Enter product description"
               value={description}
               onValueChange={setDescription}
-              isInvalid={!!errors.description}
-              errorMessage={errors.description}
               isRequired
               minRows={3}
             />
@@ -149,8 +159,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onC
                 type="number"
                 min="0"
                 step="0.01"
-                isInvalid={!!errors.price}
-                errorMessage={errors.price}
                 isRequired
               />
 
@@ -162,10 +170,21 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onC
                 type="number"
                 min="0"
                 step="1"
-                isInvalid={!!errors.stock}
-                errorMessage={errors.stock}
                 isRequired
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Imagen del producto</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageFileChange}
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-dark"
+              />
+              {imagePreview && (
+                <img src={imagePreview} alt="Preview" className="mt-2 w-32 h-32 object-cover rounded" />
+              )}
             </div>
 
             <div className="flex justify-end gap-2 pt-4">
@@ -179,9 +198,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onC
               <Button
                 color="primary"
                 type="submit"
-                isLoading={isSubmitting}
+                isLoading={isUploadingImage}
                 className="min-w-[100px]"
-                startContent={!isSubmitting && <Icon icon="lucide:save" />}
+                startContent={!isUploadingImage && <Icon icon="lucide:save" />}
               >
                 {product ? t("update") : t("create")}
               </Button>

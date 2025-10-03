@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardBody, CardHeader, Input, Button, Switch, Tabs, Tab, Select, SelectItem, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -10,16 +10,20 @@ export const AccountSettingsPage: React.FC = () => {
   const { user, updateUserSettings, isAuthenticated } = useAuth();
   const { language: currentLang, setLanguage: setAppLanguage, t } = useLanguage();
   const [activeTab, setActiveTab] = React.useState("profile");
-  const [name, setName] = React.useState(user?.name || "");
+  const [name, setName] = React.useState(user?.names || "");
   const [email, setEmail] = React.useState(user?.email || "");
   const [language, setLanguage] = React.useState<"en" | "es">(user?.settings?.language || currentLang);
   const [notifications, setNotifications] = React.useState(user?.settings?.notifications || false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [successMessage, setSuccessMessage] = React.useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   React.useEffect(() => {
     if (user) {
-      setName(user.name);
+      setName(user.names);
       setEmail(user.email);
       setLanguage(user.settings.language);
       setNotifications(user.settings.notifications);
@@ -61,6 +65,49 @@ export const AccountSettingsPage: React.FC = () => {
         setSuccessMessage("");
       }, 3000);
     }, 1000);
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setPasswordMessage(null);
+
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      setPasswordMessage({ type: "error", text: t("allFieldsRequired") });
+      setIsLoading(false);
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      setPasswordMessage({ type: "error", text: t("passwordsDoNotMatch") });
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("https://backendecommerce-production-fd6f.up.railway.app/users/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: user.id,
+          oldPassword: currentPassword,
+          newPassword: newPassword,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || t("changePasswordError"));
+      }
+
+      setPasswordMessage({ type: "success", text: t("passwordChangedSuccess") });
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+    } catch (err: any) {
+      setPasswordMessage({ type: "error", text: err.message });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!isAuthenticated) {
@@ -130,7 +177,7 @@ export const AccountSettingsPage: React.FC = () => {
                     <div className="md:w-1/3 flex flex-col items-center">
                       <div className="relative mb-4">
                         <img
-                          src={CATEGORY_IMAGES["perfil"]}
+                          src={user.photo || "https://ui-avatars.com/api/?name=User"}
                           alt="Profile"
                           className="w-32 h-32 rounded-full object-cover"
                         />
@@ -166,7 +213,7 @@ export const AccountSettingsPage: React.FC = () => {
 
                       <Input
                         label={t("role")}
-                        value={user?.role === "seller" ? t("seller") : t("buyer")}
+                        value={user?.userType === "SELLER" ? t("SELLER") : t("CUSTOMER")}
                         isReadOnly
                       />
 
@@ -284,32 +331,45 @@ export const AccountSettingsPage: React.FC = () => {
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-lg font-semibold mb-4">{t("changePassword")}</h3>
-
-                    <div className="space-y-4 max-w-md">
+                    {passwordMessage && (
+                      <div className={`mb-4 p-3 rounded ${passwordMessage.type === "success" ? "bg-success-100 text-success-700" : "bg-danger-100 text-danger-700"}`}>
+                        {passwordMessage.text}
+                      </div>
+                    )}
+                    <form className="space-y-4 max-w-md" onSubmit={handleChangePassword}>
                       <Input
                         label={t("currentPassword")}
                         placeholder={t("currentPassword")}
                         type="password"
+                        value={currentPassword}
+                        onValueChange={setCurrentPassword}
+                        isRequired
                       />
 
                       <Input
                         label={t("newPassword")}
                         placeholder={t("newPassword")}
                         type="password"
+                        value={newPassword}
+                        onValueChange={setNewPassword}
+                        isRequired
                       />
 
                       <Input
                         label={t("confirmNewPassword")}
                         placeholder={t("confirmNewPassword")}
                         type="password"
+                        value={confirmNewPassword}
+                        onValueChange={setConfirmNewPassword}
+                        isRequired
                       />
 
                       <div className="flex justify-end">
-                        <Button color="primary">
+                        <Button color="primary" type="submit" isLoading={isLoading}>
                           {t("updatePassword")}
                         </Button>
                       </div>
-                    </div>
+                    </form>
                   </div>
 
                   <Divider />

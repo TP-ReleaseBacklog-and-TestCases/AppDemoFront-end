@@ -21,6 +21,9 @@ export const NavbarComponent = () => {
     history.push("/");
   };
 
+  // Usa la foto real del usuario si está logueado
+  const userPhoto = user?.photo || "https://ui-avatars.com/api/?name=User";
+
   return (
     <Navbar maxWidth="xl" isBordered>
       <NavbarBrand>
@@ -41,7 +44,7 @@ export const NavbarComponent = () => {
             {t("explore")}
           </Link>
         </NavbarItem>
-        {user?.role === "seller" && (
+        {user?.userType === "SELLER" && (
           <NavbarItem isActive={location.pathname.startsWith("/seller")}>
             <Link as={RouterLink} to="/seller/dashboard" color="foreground">
               {t("sellerDashboard")}
@@ -76,9 +79,9 @@ export const NavbarComponent = () => {
                 as="button"
                 className="transition-transform"
                 color="primary"
-                name={user?.name}
+                name={user?.names}
                 size="sm"
-                src={CATEGORY_IMAGES["perfil"]}
+                src={userPhoto}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="User Actions" variant="flat">
@@ -91,7 +94,7 @@ export const NavbarComponent = () => {
                   {t("accountSettings")}
                 </Link>
               </DropdownItem>
-              {user?.role === "seller" && (
+              {user?.userType === "SELLER" && (
                 <DropdownItem key="dashboard">
                   <Link as={RouterLink} to="/seller/dashboard" color="foreground" className="w-full block">
                     {t("sellerDashboard")}

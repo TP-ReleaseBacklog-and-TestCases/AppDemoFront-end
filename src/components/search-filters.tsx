@@ -25,14 +25,15 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onFilter
   const [activeFilters, setActiveFilters] = React.useState<string[]>([]);
   const { t } = useLanguage();
 
+  // SOLO las categorías válidas de tu backend
   const categories = React.useMemo(
     () => [
       { value: "all", label: t("allCategories") },
-      { value: "Electronics", label: t("electronics") },
-      { value: "Books", label: t("books") },
-      { value: "Clothing", label: t("clothing") },
-      { value: "Home", label: t("homeKitchen") },
-      { value: "Sports", label: t("sportsOutdoors") },
+      { value: "ELECTRONIC", label: t("ELECTRONIC") },
+      { value: "FASHION", label: t("FASHION") },
+      { value: "CLOTHING", label: t("CLOTHING") },
+      { value: "HOME", label: t("HOME") },
+      { value: "SPORTS", label: t("SPORTS") },
     ],
     [t]
   );
